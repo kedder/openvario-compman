@@ -8,6 +8,9 @@ verify_ssl = true
 [packages]
 urwid = "*"
 openvario-compman = {editable = true,path = "."}
+lxml = "*"
+aiohttp = "*"
+aiodns = "*"
 
 [requires]
 python_version = "3.7"

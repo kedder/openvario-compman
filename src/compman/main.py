@@ -1,8 +1,10 @@
 import urwid
 import asyncio
 
+from compman import config
+from compman import storage
 from compman.ui import widget
-from compman.ui.soaringspot import SoaringSpotPicker, SoaringSpotCompetition
+from compman.ui.soaringspot import SoaringSpotPicker
 
 
 async def show_progress():
@@ -19,26 +21,24 @@ competitions = []
 
 
 def make_comp_switcher() -> None:
-    def handle_press(ev, data):
-        global competitions
-        comp = SoaringSpotCompetition(
-            "New Comp. The name they picked is really really long. How did they care to type that much?",
-            "Description that is really really long. Doesn't fit in one line at all.",
-        )
-        competitions.append(comp)
-        sspicker.set_competitions(competitions)
-
+    def handle_press(ev):
         global curtask
         if curtask != None and not curtask.done():
             curtask.cancel()
         curtask = asyncio.create_task(show_progress())
 
-    li = widget.CMSelectableListItem("Lietuvos sklandymo čempionatas")
-    urwid.connect_signal(li, "click", handle_press, {"one": "two"})
-    items = [li] * 4
+    # li = widget.CMSelectableListItem("Lietuvos sklandymo čempionatas")
+    # urwid.connect_signal(li, "click", handle_press, {"one": "two"})
+    # items = [li] * 4
 
-    hellobtn = widget.CMSelectableListItem("Hello")
-    items.insert(0, hellobtn)
+    # hellobtn = widget.CMSelectableListItem("Hello")
+    # items.insert(0, hellobtn)
+
+    items = []
+    for comp in storage.get_all():
+        li = widget.CMSelectableListItem(comp.title)
+        urwid.connect_signal(li, "click", handle_press)
+        items.append(li)
 
     lw = urwid.SimpleListWalker(items)
     listbox = urwid.ListBox(lw)
@@ -54,7 +54,7 @@ def make_button_row() -> None:
 
 
 async def startui(urwidloop):
-    await asyncio.sleep(1)
+    await asyncio.sleep(0.3)
 
     global sspicker
 
@@ -78,6 +78,11 @@ async def startui(urwidloop):
 
 def main() -> None:
     # btxt.set_text('hello')
+    # Read config
+    cfg = config.load()
+    config.set(cfg)
+
+    storage.init()
 
     # mainwidget = urwid.SolidFill('X')
     btxt = urwid.BigText(u"Openvario", urwid.font.Thin6x6Font())
