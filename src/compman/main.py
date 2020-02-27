@@ -55,9 +55,15 @@ def make_button_row() -> None:
 
 async def startui(urwidloop):
     from compman.ui.welcome import WelcomeScreen
-    screen = WelcomeScreen()
-    urwidloop.widget = screen.view
-    # await asyncio.sleep(0.3)
+    container = urwid.WidgetPlaceholder(urwid.SolidFill(' '))
+    urwidloop.widget = container
+    screen = WelcomeScreen(container)
+    # urwidloop.widget = screen.view
+    try:
+        comp = await screen.response
+        print("PICKED COMP", comp)
+    except asyncio.CancelledError as e:
+        print("CANCELLED", e)
 
     # global sspicker
 
@@ -74,7 +80,7 @@ async def startui(urwidloop):
     # # footer = urwid.LineBox(urwid.Text(u"Competition Manager"))
     # global progressbar
     # progressbar = footer = urwid.ProgressBar("pg normal", "pg complete", current=82.5)
-    # frame = urwid.Frame(mainview, footer=footer)
+        # frame = urwid.Frame(mainview, footer=footer)
     # main = urwid.AttrMap(frame, "bg")
     # urwidloop.widget = main
 
@@ -107,7 +113,9 @@ def main() -> None:
     asyncioloop = asyncio.get_event_loop()
     evl = urwid.AsyncioEventLoop(loop=asyncioloop)
     urwidloop = urwid.MainLoop(intro, palette=palette, event_loop=evl)
-    asyncioloop.create_task(startui(urwidloop))
+    global amain
+    amain = startui(urwidloop)
+    asyncioloop.create_task(amain)
     try:
         urwidloop.run()
     except KeyboardInterrupt:
