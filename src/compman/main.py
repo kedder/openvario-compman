@@ -54,26 +54,29 @@ def make_button_row() -> None:
 
 
 async def startui(urwidloop):
-    await asyncio.sleep(0.3)
+    from compman.ui.welcome import WelcomeScreen
+    screen = WelcomeScreen()
+    urwidloop.widget = screen.view
+    # await asyncio.sleep(0.3)
 
-    global sspicker
+    # global sspicker
 
-    contents1 = make_comp_switcher()
-    sspicker = SoaringSpotPicker()
+    # contents1 = make_comp_switcher()
+    # sspicker = SoaringSpotPicker()
 
-    upperbox = urwid.LineBox(contents1, "My Competitions", title_align="left")
-    lowerbox = urwid.LineBox(sspicker, "Add a Competition", title_align="left")
+    # upperbox = urwid.LineBox(contents1, "My Competitions", title_align="left")
+    # lowerbox = urwid.LineBox(sspicker, "Add a Competition", title_align="left")
 
-    buttonrow = make_button_row()
+    # buttonrow = make_button_row()
 
-    mainview = urwid.Pile([(10, upperbox), lowerbox, (3, buttonrow)])
+    # mainview = urwid.Pile([(10, upperbox), lowerbox, (3, buttonrow)])
 
-    # footer = urwid.LineBox(urwid.Text(u"Competition Manager"))
-    global progressbar
-    progressbar = footer = urwid.ProgressBar("pg normal", "pg complete", current=82.5)
-    frame = urwid.Frame(mainview, footer=footer)
-    main = urwid.AttrMap(frame, "bg")
-    urwidloop.widget = main
+    # # footer = urwid.LineBox(urwid.Text(u"Competition Manager"))
+    # global progressbar
+    # progressbar = footer = urwid.ProgressBar("pg normal", "pg complete", current=82.5)
+    # frame = urwid.Frame(mainview, footer=footer)
+    # main = urwid.AttrMap(frame, "bg")
+    # urwidloop.widget = main
 
 
 def main() -> None:
