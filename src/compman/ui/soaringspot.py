@@ -6,6 +6,7 @@ import urwid
 from compman.ui import widget
 from compman import soaringspot
 from compman import storage
+from compman import config
 
 
 class SoaringSpotPicker(urwid.ListBox):
@@ -75,7 +76,8 @@ class SoaringSpotPickerScreen:
         )
 
     def _on_competition_selected(self, ev, comp):
-        print("SELECTED", comp)
+        config.get().current_competition_id = comp.id
+        config.save()
         self.response.set_result(comp)
 
     def _on_comp_focused(self, ev, comp):

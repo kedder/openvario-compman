@@ -12,17 +12,25 @@ class StoredCompetition:
     id: str
     title: str
     soaringspot_url: Optional[str] = None
+    airspace: Optional[str] = None
+    waypoints: Optional[str] = None
 
     @classmethod
     def fromdict(cls, id: str, data: Dict[str, Any]) -> "StoredCompetition":
         return cls(
-            id=id, title=data["title"], soaringspot_url=data.get("soaringspot_url")
+            id=id,
+            title=data["title"],
+            soaringspot_url=data.get("soaringspot_url"),
+            airspace=data.get("airspace"),
+            waypoints=data.get("waypoints"),
         )
 
     def asdict(self) -> Dict[str, Any]:
         return {
             "title": self.title,
             "soaringspot_url": self.soaringspot_url,
+            "airspace": self.airspace,
+            "waypoints": self.waypoints,
             "version": 1,
         }
 
@@ -44,9 +52,9 @@ def save_competition(comp: StoredCompetition) -> None:
         f.write("\n")
 
 
-def load_competiton(cid: str) -> StoredCompetition:
+def load_competiton(cid: str) -> Optional[StoredCompetition]:
     if not exists(cid):
-        raise RuntimeError(f"Competition {cid} does not exist")
+        return None
 
     with open(_get_compconfigname(cid), "rt") as f:
         compdict = json.load(f)

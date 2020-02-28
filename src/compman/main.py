@@ -54,16 +54,24 @@ def make_button_row() -> None:
 
 
 async def startui(urwidloop):
-    from compman.ui.welcome import WelcomeScreen
     container = urwid.WidgetPlaceholder(urwid.SolidFill(' '))
     urwidloop.widget = container
-    screen = WelcomeScreen(container)
-    # urwidloop.widget = screen.view
-    try:
+
+    def_comp_id = config.get().current_competition_id
+    comp = None
+    if def_comp_id:
+        comp = storage.load_competiton(def_comp_id)
+
+    if comp is None:
+        from compman.ui.welcome import WelcomeScreen
+        screen = WelcomeScreen(container)
+        # urwidloop.widget = screen.view
         comp = await screen.response
-        print("PICKED COMP", comp)
-    except asyncio.CancelledError as e:
-        print("CANCELLED", e)
+
+    from compman.ui.compdetails import CompetitionDetailsScreen
+    screen = CompetitionDetailsScreen(container, comp)
+
+    await screen.response
 
     # global sspicker
 
