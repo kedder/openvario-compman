@@ -1,12 +1,27 @@
-from typing import List
+from typing import List, IO
 import re
 import io
+from enum import Enum
 from dataclasses import dataclass
 from aiohttp import ClientSession
+
 from lxml import etree
 
 
-SOARINGSPOT_URL = "https://www.soaringspot.com/"
+SOARINGSPOT_URL = "https://www.soaringspot.com"
+
+
+class DownloadableFileType(Enum):
+    UNKNOWN = "unknown"
+    AIRSPACE = "airspace"
+    WAYPOINT = "waypoint"
+
+
+@dataclass
+class SoaringSpotDownloadableFile:
+    filename: str
+    href: str
+    kind: DownloadableFileType = DownloadableFileType.UNKNOWN
 
 
 @dataclass
@@ -38,6 +53,41 @@ async def fetch_competitions() -> List[SoaringSpotContest]:
         )
 
     return contests
+
+
+async def fetch_downloads(comp_url: str) -> List[SoaringSpotDownloadableFile]:
+    dl_url = f"{comp_url}/downloads"
+    async with ClientSession() as session:
+        async with session.get(dl_url) as response:
+            html = await response.text()
+
+    parser = etree.HTMLParser()
+    root = etree.parse(io.StringIO(html), parser)
+
+    dls = []
+    for anode in root.xpath("//ul[@class='contest-downloads']/li/a"):
+        filename = " ".join(anode.itertext()).strip()
+        url = anode.attrib["href"]
+        dl = SoaringSpotDownloadableFile(
+            filename=filename, href=f"{SOARINGSPOT_URL}{url}"
+        )
+        if filename.endswith(".txt"):
+            dl.kind = DownloadableFileType.AIRSPACE
+        elif filename.endswith(".cup"):
+            dl.kind = DownloadableFileType.WAYPOINT
+
+        if dl.kind != DownloadableFileType.UNKNOWN:
+            dls.append(dl)
+
+    return dls
+
+
+async def fetch_file(file_url: str) -> IO[bytes]:
+    async with ClientSession() as session:
+        async with session.get(file_url) as response:
+            content = await response.read()
+
+    return io.BytesIO(content)
 
 
 def _extract_text(els) -> str:
