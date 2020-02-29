@@ -1,5 +1,6 @@
 import urwid
 import asyncio
+import logging
 
 from compman import config
 from compman import storage
@@ -92,10 +93,15 @@ async def startui(urwidloop):
     # main = urwid.AttrMap(frame, "bg")
     # urwidloop.widget = main
 
+def exception_handler(loop, context):
+    logging.error(f"ASYNCIO ERROR, {context}")
+
 
 def main() -> None:
     # btxt.set_text('hello')
     # Read config
+    logging.basicConfig(filename='compman.log',level=logging.DEBUG)
+
     cfg = config.load()
     config.set(cfg)
 
@@ -119,10 +125,12 @@ def main() -> None:
     ]
 
     asyncioloop = asyncio.get_event_loop()
+    asyncioloop.set_debug(True)
     evl = urwid.AsyncioEventLoop(loop=asyncioloop)
     urwidloop = urwid.MainLoop(intro, palette=palette, event_loop=evl)
     global amain
     amain = startui(urwidloop)
+    asyncioloop.set_exception_handler(exception_handler)
     asyncioloop.create_task(amain)
     try:
         urwidloop.run()

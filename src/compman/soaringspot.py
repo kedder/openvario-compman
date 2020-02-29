@@ -49,14 +49,16 @@ async def fetch_competitions() -> List[SoaringSpotContest]:
         cid = href.strip(" /").split("/")[-1]
 
         contests.append(
-            SoaringSpotContest(id=cid, href=href, title=title, description=descr)
+            SoaringSpotContest(
+                id=cid, href=f"{SOARINGSPOT_URL}{href}", title=title, description=descr
+            )
         )
 
     return contests
 
 
 async def fetch_downloads(comp_url: str) -> List[SoaringSpotDownloadableFile]:
-    dl_url = f"{comp_url}/downloads"
+    dl_url = f"{_sanitize_url(comp_url)}/downloads"
     async with ClientSession() as session:
         async with session.get(dl_url) as response:
             html = await response.text()
@@ -97,3 +99,7 @@ def _extract_text(els) -> str:
 
     joined = " ".join(texts)
     return re.sub(r"[ \n]+", " ", joined).strip()
+
+
+def _sanitize_url(url: str) -> str:
+    return url.rstrip('/')
