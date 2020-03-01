@@ -3,19 +3,21 @@ import asyncio
 
 import urwid
 
-from compman.ui import widget
 from compman import soaringspot
 from compman import storage
 from compman import config
+from compman.ui.activity import Activity
+from compman.ui import widget
 
 
 class SoaringSpotPicker(urwid.ListBox):
     signals = ["select", "focus"]
 
-    def __init__(self) -> None:
+    def __init__(self, activity: Activity) -> None:
         self._items = urwid.SimpleListWalker([])
         super().__init__(self._items)
-        asyncio.create_task(self._download_competitions())
+        self.activity = activity
+        activity.async_task(self._download_competitions())
 
     def set_competitions(
         self, competitions: List[soaringspot.SoaringSpotContest]
@@ -46,6 +48,11 @@ class SoaringSpotPicker(urwid.ListBox):
     def _on_competition_selected(
         self, btn: urwid.Widget, sscomp: soaringspot.SoaringSpotContest
     ) -> None:
+        existing = storage.load_competiton(sscomp.id)
+        if existing is not None:
+            self._emit("select", existing)
+            return
+
         comp = storage.StoredCompetition(
             id=sscomp.id, title=sscomp.title, soaringspot_url=sscomp.href
         )
@@ -58,13 +65,9 @@ class SoaringSpotPicker(urwid.ListBox):
         self._emit("focus", selected)
 
 
-class SoaringSpotPickerScreen:
-    def __init__(self, container):
-        container.original_widget = self._create_view()
-        self.response = asyncio.Future()
-
-    def _create_view(self):
-        mainview = SoaringSpotPicker()
+class SoaringSpotPickerScreen(Activity):
+    def create_view(self):
+        mainview = SoaringSpotPicker(self)
         urwid.connect_signal(mainview, "select", self._on_competition_selected)
         urwid.connect_signal(mainview, "focus", self._on_comp_focused)
         self.footer = urwid.Text("")
@@ -78,7 +81,7 @@ class SoaringSpotPickerScreen:
     def _on_competition_selected(self, ev, comp):
         config.get().current_competition_id = comp.id
         config.save()
-        self.response.set_result(comp)
+        self.finish(comp)
 
     def _on_comp_focused(self, ev, comp):
         self.footer.set_text(comp.description)

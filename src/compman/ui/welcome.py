@@ -1,17 +1,11 @@
 """Welcome screen"""
-import asyncio
-
 import urwid
 from compman.ui import widget
+from compman.ui.activity import Activity
 
 
-class WelcomeScreen:
-    def __init__(self, container):
-        container.original_widget = self._create_view()
-        self.container = container
-        self.response = asyncio.Future()
-
-    def _create_view(self):
+class WelcomeScreen(Activity):
+    def create_view(self):
         btxt = urwid.BigText(u"Compman", urwid.font.Thin6x6Font())
         hpad = urwid.Padding(btxt, "center", "clip")
 
@@ -24,8 +18,7 @@ class WelcomeScreen:
 
 
         add_comp_button = widget.CMButton("Add a Competition")
-        # urwid.connect_signal(add_comp_button, "click", self._handle_add_button)
-        urwid.connect_signal(add_comp_button, "click", self._async, self._pick_competition)
+        self.connect_async(add_comp_button, "click", self._pick_competition)
 
         intro = urwid.Padding(
             urwid.Pile(
@@ -59,15 +52,8 @@ class WelcomeScreen:
 
         return view
 
-    def __del__(self):
-        print("DROPPED WELCOME SCREEN")
-
-    def _async(self, ev, task):
-        asyncio.create_task(task())
-
     async def _pick_competition(self):
         from compman.ui.soaringspot import SoaringSpotPickerScreen
-        screen = SoaringSpotPickerScreen(self.container)
-        res = await screen.response
-        self.response.set_result(res)
-        # self.response.set_result("HELLO WORLD")
+        res = await self.run_activity(SoaringSpotPickerScreen(self.container))
+        if res is not None:
+            self.finish(res)

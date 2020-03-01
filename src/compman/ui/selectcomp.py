@@ -1,27 +1,24 @@
-import asyncio
 import logging
 
 import urwid
+
 from compman.ui import widget
+from compman.ui.activity import Activity
 from compman import storage
+from compman import config
 
 
 log = logging.getLogger("compman")
 
 
-class SelectCompetitionScreen:
-    def __init__(self, container):
-        container.original_widget = self._create_view()
-        self.container = container
-        self.response = asyncio.Future()
-
-    def _create_view(self):
+class SelectCompetitionScreen(Activity):
+    def create_view(self):
         self._items = []
         self._populate_stored_comps()
         picker = urwid.Pile(self._items)
 
         add_btn = widget.CMButton("New competition")
-        urwid.connect_signal(add_btn, "click", self._on_new_competition)
+        self.connect_async(add_btn, "click", self._on_new_competition)
         cancel_btn = widget.CMButton("Cancel")
         urwid.connect_signal(cancel_btn, "click", self._on_cancel)
 
@@ -41,17 +38,25 @@ class SelectCompetitionScreen:
             self._items.append(btn)
 
     def _on_competition_selected(self, btn, comp):
-        self.response.set_result(comp)
+        config.get().current_competition_id = comp.id
+        config.save()
+        self._comp_selected(comp)
 
-    def _on_new_competition(self, btn):
-        self._picker_task = asyncio.create_task(self._pick_soaringspot_comp())
-
-    async def _pick_soaringspot_comp(self):
+    async def _on_new_competition(self):
         from compman.ui.soaringspot import SoaringSpotPickerScreen
 
         screen = SoaringSpotPickerScreen(self.container)
-        comp = await screen.response
-        self.response.set_result(comp)
+        res = await self.run_activity(screen)
+        if res is not None:
+            self._comp_selected(res)
+
+    def _comp_selected(self, comp):
+        self.finish(comp)
+
+        from compman.ui.compdetails import CompetitionDetailsScreen
+        details = CompetitionDetailsScreen(self.container)
+        details.show()
+
 
     def _on_cancel(self, btn):
-        self.response.set_result(None)
+        self.finish(None)

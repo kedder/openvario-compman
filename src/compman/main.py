@@ -10,32 +10,36 @@ async def startui(urwidloop):
     container = urwid.WidgetPlaceholder(urwid.SolidFill(" "))
     urwidloop.widget = container
 
+    # from compman.ui.welcome import WelcomeScreen
+    # screen = WelcomeScreen(container)
+    # screen.show()
+    # # urwidloop.widget = screen.view
+    # comp = await screen.response
+
     # from compman.ui.selectcomp import SelectCompetitionScreen
     # screen = SelectCompetitionScreen(container)
     # await screen.response
 
 
-    def_comp_id = config.get().current_competition_id
-    comp = None
-    if def_comp_id:
-        comp = storage.load_competiton(def_comp_id)
+    # def_comp_id = config.get().current_competition_id
+    # comp = None
+    # if def_comp_id:
+    #     comp = storage.load_competiton(def_comp_id)
 
-    if comp is None:
-        from compman.ui.welcome import WelcomeScreen
+    # if comp is None:
+    #     from compman.ui.welcome import WelcomeScreen
 
-        screen = WelcomeScreen(container)
-        # urwidloop.widget = screen.view
-        comp = await screen.response
+    #     screen = WelcomeScreen(container)
+    #     # urwidloop.widget = screen.view
+    #     comp = await screen.response
 
-    from compman.ui.compdetails import CompetitionDetailsScreen
-
-    screen = CompetitionDetailsScreen(container)
-
-    await screen.response
+    # from compman.ui.compdetails import CompetitionDetailsScreen
+    # screen = CompetitionDetailsScreen(container)
+    # await screen.response
 
     from compman.ui.mainmenu import MainMenuScreen
-
     screen = MainMenuScreen(container)
+    screen.show()
     await screen.response
 
     raise urwid.ExitMainLoop()

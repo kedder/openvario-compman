@@ -8,37 +8,25 @@ from compman import storage
 from compman import soaringspot
 from compman import config
 from compman.ui import widget
+from compman.ui.activity import Activity
 
 nothing = urwid.Pile([])
 
 log = logging.getLogger("compman")
 
 
-def logerrors(f):
-    async def wrapper(*args, **kwargs):
-        try:
-            return await f(*args, **kwargs)
-        except Exception:
-            log.exception("Unexpected exception")
-
-    return wrapper
-
-
-class CompetitionDetailsScreen:
-    def __init__(self, container):
+class CompetitionDetailsScreen(Activity):
+    def show(self):
         cid = config.get().current_competition_id
         self.competition = storage.load_competiton(cid)
         self.airspaces = storage.get_airspace_files(cid)
         self.waypoints = storage.get_waypoint_files(cid)
-        container.original_widget = self._create_view()
 
+        super().show()
         self._flashtask = None
+        self.async_task(self._update_competition_files())
 
-
-        self.response = asyncio.Future()
-        self._dltask = asyncio.create_task(self._update_competition_files())
-
-    def _create_view(self):
+    def create_view(self):
         p2 = lambda w: urwid.Padding(w, left=2)
 
         self.airspace_group = []
@@ -94,7 +82,9 @@ class CompetitionDetailsScreen:
 
     def _create_buttons(self):
         apply_btn = widget.CMButton("Apply")
-        urwid.connect_signal(apply_btn, "click", self._on_apply)
+        self.connect_async(
+            apply_btn, "click", self._flash_status, user_args=["Settings applied"]
+        )
 
         exit_btn = widget.CMButton("Main Menu")
         urwid.connect_signal(exit_btn, "click", self._on_exit)
@@ -114,24 +104,19 @@ class CompetitionDetailsScreen:
         storage.save_competition(self.competition)
         self._flash(f"Waypoint changed to: {selected}")
 
-    def _on_apply(self, btn):
-        self._flash("Settings applied")
-
     def _on_exit(self, btn):
-        self.response.set_result(None)
+        self.finish(None)
 
     def _flash(self, message: str):
         if self._flashtask and not self._flashtask.done():
             self._flashtask.cancel()
         self._flashtask = asyncio.create_task(self._flash_status(message))
 
-    @logerrors
     async def _flash_status(self, message: str):
         self.footer.set_text(message)
         await asyncio.sleep(3.0)
         self.footer.set_text("")
 
-    @logerrors
     async def _update_competition_files(self):
         compurl = self.competition.soaringspot_url
         if compurl is None:
@@ -184,7 +169,7 @@ class CompetitionDetailsScreen:
         for sspotfile in new_files:
             sf = storage.StoredFile(name=sspotfile.filename, size=None)
             radio = self._make_file_radio(sf, group, False, select_handler)
-            checkbox_pile.contents.insert(0, (radio, ('pack', None)))
+            checkbox_pile.contents.insert(0, (radio, ("pack", None)))
             tasks.append(self._download_file(sf, sspotfile.href, radio))
 
         return tasks
