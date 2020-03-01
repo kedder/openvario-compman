@@ -3,6 +3,8 @@ import asyncio
 import urwid
 from compman.ui import widget
 from compman.ui.compdetails import CompetitionDetailsScreen
+from compman.ui.selectcomp import SelectCompetitionScreen
+
 
 class MainMenuScreen:
     def __init__(self, container):
@@ -16,9 +18,14 @@ class MainMenuScreen:
         hpad = urwid.Padding(btxt, "center", "clip")
 
         m_select_comp = widget.CMSelectableListItem("Select Competition")
+        urwid.connect_signal(
+            m_select_comp, "click", self._on_screen_selected, SelectCompetitionScreen
+        )
 
         m_details = widget.CMSelectableListItem("Current Competition")
-        urwid.connect_signal(m_details, "click", self._on_screen_selected, CompetitionDetailsScreen)
+        urwid.connect_signal(
+            m_details, "click", self._on_screen_selected, CompetitionDetailsScreen
+        )
         m_exit = widget.CMSelectableListItem("Exit")
         urwid.connect_signal(m_exit, "click", self._on_exit)
 

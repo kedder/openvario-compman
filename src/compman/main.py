@@ -5,9 +5,15 @@ import logging
 from compman import config
 from compman import storage
 
+
 async def startui(urwidloop):
-    container = urwid.WidgetPlaceholder(urwid.SolidFill(' '))
+    container = urwid.WidgetPlaceholder(urwid.SolidFill(" "))
     urwidloop.widget = container
+
+    # from compman.ui.selectcomp import SelectCompetitionScreen
+    # screen = SelectCompetitionScreen(container)
+    # await screen.response
+
 
     def_comp_id = config.get().current_competition_id
     comp = None
@@ -16,16 +22,19 @@ async def startui(urwidloop):
 
     if comp is None:
         from compman.ui.welcome import WelcomeScreen
+
         screen = WelcomeScreen(container)
         # urwidloop.widget = screen.view
         comp = await screen.response
 
     from compman.ui.compdetails import CompetitionDetailsScreen
+
     screen = CompetitionDetailsScreen(container)
 
     await screen.response
 
     from compman.ui.mainmenu import MainMenuScreen
+
     screen = MainMenuScreen(container)
     await screen.response
 
@@ -35,7 +44,7 @@ async def startui(urwidloop):
 def main() -> None:
     # btxt.set_text('hello')
     # Read config
-    logging.basicConfig(filename='compman.log',level=logging.DEBUG)
+    logging.basicConfig(filename="compman.log", level=logging.DEBUG)
 
     cfg = config.load()
     config.set(cfg)

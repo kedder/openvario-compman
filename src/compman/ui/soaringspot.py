@@ -67,11 +67,11 @@ class SoaringSpotPickerScreen:
         mainview = SoaringSpotPicker()
         urwid.connect_signal(mainview, "select", self._on_competition_selected)
         urwid.connect_signal(mainview, "focus", self._on_comp_focused)
-        self.footer = urwid.Text("Hello\n\nWorld")
+        self.footer = urwid.Text("")
 
         return urwid.Frame(
             urwid.Padding(mainview, left=2, right=2),
-            header=urwid.Text("Pick a competition"),
+            header=urwid.Text("Pick a new competition"),
             footer=urwid.LineBox(self.footer),
         )
 

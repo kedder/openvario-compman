@@ -79,6 +79,18 @@ def load_competiton(cid: str) -> Optional[StoredCompetition]:
     return comp
 
 
+def list_competitions() -> List[StoredCompetition]:
+    datadir = config.get().datadir
+    competitions = []
+    for cid in os.listdir(datadir):
+        if not exists(cid):
+            continue
+        comp = load_competiton(cid)
+        competitions.append(comp)
+
+    return competitions
+
+
 def store_file(cid: str, filename: str, contents: IO[bytes]) -> StoredFile:
     cdir = _get_compdir(cid)
     fullname = os.path.join(cdir, filename)
@@ -110,21 +122,8 @@ def _get_files(cid: str, ext: str) -> List[StoredFile]:
 
 
 def exists(cid: str) -> bool:
-    compdir = _get_compdir(cid)
-    return os.path.exists(compdir)
-
-
-def get_all() -> List[StoredCompetition]:
-    datadir = config.get().datadir
-    competitions = []
-    for cid in os.listdir(datadir):
-        conffname = _get_compconfigname(cid)
-        if not os.path.exists(conffname):
-            continue
-        comp = load_competiton(cid)
-        competitions.append(comp)
-
-    return competitions
+    configfname = _get_compconfigname(cid)
+    return os.path.exists(configfname)
 
 
 def _get_compdir(cid: str) -> str:

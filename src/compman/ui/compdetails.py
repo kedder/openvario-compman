@@ -184,8 +184,8 @@ class CompetitionDetailsScreen:
         for sspotfile in new_files:
             sf = storage.StoredFile(name=sspotfile.filename, size=None)
             radio = self._make_file_radio(sf, group, False, select_handler)
+            checkbox_pile.contents.insert(0, (radio, ('pack', None)))
             tasks.append(self._download_file(sf, sspotfile.href, radio))
-            checkbox_pile.widget_list.insert(0, radio)
 
         return tasks
 
