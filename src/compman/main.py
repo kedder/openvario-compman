@@ -4,55 +4,6 @@ import logging
 
 from compman import config
 from compman import storage
-from compman.ui import widget
-from compman.ui.soaringspot import SoaringSpotPicker
-
-
-async def show_progress():
-    global progressbar
-    for p in range(1000):
-        progressbar.set_completion(p / 10 + 1)
-        await asyncio.sleep(0.01)
-
-
-curtask = None
-sspicker = None
-
-competitions = []
-
-
-def make_comp_switcher() -> None:
-    def handle_press(ev):
-        global curtask
-        if curtask != None and not curtask.done():
-            curtask.cancel()
-        curtask = asyncio.create_task(show_progress())
-
-    # li = widget.CMSelectableListItem("Lietuvos sklandymo čempionatas")
-    # urwid.connect_signal(li, "click", handle_press, {"one": "two"})
-    # items = [li] * 4
-
-    # hellobtn = widget.CMSelectableListItem("Hello")
-    # items.insert(0, hellobtn)
-
-    items = []
-    for comp in storage.get_all():
-        li = widget.CMSelectableListItem(comp.title)
-        urwid.connect_signal(li, "click", handle_press)
-        items.append(li)
-
-    lw = urwid.SimpleListWalker(items)
-    listbox = urwid.ListBox(lw)
-    return listbox
-
-
-def make_button_row() -> None:
-    b1 = widget.CMButton("Refresh")
-    b2 = widget.CMButton("Download")
-    b3 = widget.CMButton("Help")
-
-    return urwid.Filler(urwid.GridFlow([b1, b2, b3], 15, 2, 1, "center"), "middle")
-
 
 async def startui(urwidloop):
     container = urwid.WidgetPlaceholder(urwid.SolidFill(' '))
@@ -70,31 +21,15 @@ async def startui(urwidloop):
         comp = await screen.response
 
     from compman.ui.compdetails import CompetitionDetailsScreen
-    screen = CompetitionDetailsScreen(container, comp)
+    screen = CompetitionDetailsScreen(container)
 
     await screen.response
 
-    # global sspicker
+    from compman.ui.mainmenu import MainMenuScreen
+    screen = MainMenuScreen(container)
+    await screen.response
 
-    # contents1 = make_comp_switcher()
-    # sspicker = SoaringSpotPicker()
-
-    # upperbox = urwid.LineBox(contents1, "My Competitions", title_align="left")
-    # lowerbox = urwid.LineBox(sspicker, "Add a Competition", title_align="left")
-
-    # buttonrow = make_button_row()
-
-    # mainview = urwid.Pile([(10, upperbox), lowerbox, (3, buttonrow)])
-
-    # # footer = urwid.LineBox(urwid.Text(u"Competition Manager"))
-    # global progressbar
-    # progressbar = footer = urwid.ProgressBar("pg normal", "pg complete", current=82.5)
-        # frame = urwid.Frame(mainview, footer=footer)
-    # main = urwid.AttrMap(frame, "bg")
-    # urwidloop.widget = main
-
-def exception_handler(loop, context):
-    logging.error(f"ASYNCIO ERROR, {context}")
+    raise urwid.ExitMainLoop()
 
 
 def main() -> None:
@@ -130,7 +65,6 @@ def main() -> None:
     urwidloop = urwid.MainLoop(intro, palette=palette, event_loop=evl)
     global amain
     amain = startui(urwidloop)
-    asyncioloop.set_exception_handler(exception_handler)
     asyncioloop.create_task(amain)
     try:
         urwidloop.run()

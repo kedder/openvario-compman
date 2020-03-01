@@ -6,6 +6,8 @@ import urwid
 
 from compman import storage
 from compman import soaringspot
+from compman import config
+from compman.ui import widget
 
 nothing = urwid.Pile([])
 
@@ -23,17 +25,17 @@ def logerrors(f):
 
 
 class CompetitionDetailsScreen:
-    def __init__(self, container, competition: storage.StoredCompetition):
-        self.competition = competition
-        self.response = asyncio.Future()
-
-        self._flashtask = None
-
-        cid = self.competition.id
+    def __init__(self, container):
+        cid = config.get().current_competition_id
+        self.competition = storage.load_competiton(cid)
         self.airspaces = storage.get_airspace_files(cid)
         self.waypoints = storage.get_waypoint_files(cid)
         container.original_widget = self._create_view()
 
+        self._flashtask = None
+
+
+        self.response = asyncio.Future()
         self._dltask = asyncio.create_task(self._update_competition_files())
 
     def _create_view(self):
@@ -75,6 +77,8 @@ class CompetitionDetailsScreen:
                 urwid.Divider(),
                 urwid.Text("Waypoint files"),
                 p2(self.waypoint_pile),
+                urwid.Divider(),
+                self._create_buttons(),
             ]
         )
 
@@ -87,6 +91,14 @@ class CompetitionDetailsScreen:
             header=urwid.Text(self.competition.title),
             footer=self.footer,
         )
+
+    def _create_buttons(self):
+        apply_btn = widget.CMButton("Apply")
+        urwid.connect_signal(apply_btn, "click", self._on_apply)
+
+        exit_btn = widget.CMButton("Main Menu")
+        urwid.connect_signal(exit_btn, "click", self._on_exit)
+        return urwid.GridFlow([apply_btn, exit_btn], 22, 2, 1, "left")
 
     def _on_airspace_changed(self, ev, new_state, selected):
         if not new_state:
@@ -102,11 +114,18 @@ class CompetitionDetailsScreen:
         storage.save_competition(self.competition)
         self._flash(f"Waypoint changed to: {selected}")
 
+    def _on_apply(self, btn):
+        self._flash("Settings applied")
+
+    def _on_exit(self, btn):
+        self.response.set_result(None)
+
     def _flash(self, message: str):
         if self._flashtask and not self._flashtask.done():
             self._flashtask.cancel()
         self._flashtask = asyncio.create_task(self._flash_status(message))
 
+    @logerrors
     async def _flash_status(self, message: str):
         self.footer.set_text(message)
         await asyncio.sleep(3.0)
