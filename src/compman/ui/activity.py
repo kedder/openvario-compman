@@ -3,6 +3,8 @@ import logging
 
 import urwid
 
+from compman.ui import widget
+
 log = logging.getLogger("compman")
 
 
@@ -14,7 +16,9 @@ class Activity:
     def show(self):
         self._tasks = []
         self._previous_widget = self.container.original_widget
-        self.container.original_widget = self.create_view()
+        self.container.original_widget = widget.CMGlobalCommands(
+            self.create_view(), self
+        )
 
     def finish(self, result):
         # Cancel any outstanding tasks

@@ -1,5 +1,10 @@
 import asyncio
+import logging
+
 import urwid
+
+
+log = logging.getLogger("compman")
 
 
 class CMButton(urwid.Button):
@@ -58,3 +63,15 @@ class CMFlashMessage(urwid.WidgetWrap):
         self.text.set_text(markup)
         await asyncio.sleep(3.0)
         self.text.set_text("")
+
+
+class CMGlobalCommands(urwid.WidgetWrap):
+    def __init__(self, widget, activity):
+        super().__init__(widget)
+        self.activity = activity
+
+    def keypress(self, size, key):
+        if key == "esc":
+            self.activity.finish(None)
+            return
+        return self._w.keypress(size, key)
