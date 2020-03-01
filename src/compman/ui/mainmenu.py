@@ -9,7 +9,7 @@ from compman.ui.selectcomp import SelectCompetitionScreen
 class MainMenuScreen(Activity):
     def create_view(self):
         btxt = urwid.BigText(u"Compman", urwid.font.Thin6x6Font())
-        hpad = urwid.Padding(btxt, "center", "clip")
+        hpad = urwid.Padding(urwid.AttrMap(btxt, "screen header"), "center", "clip")
 
         m_select_comp = widget.CMSelectableListItem("Select Competition")
         urwid.connect_signal(

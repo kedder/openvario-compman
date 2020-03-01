@@ -40,8 +40,7 @@ class SoaringSpotPicker(urwid.ListBox):
 
     async def _download_competitions(self):
         del self._items[:]
-        progressbar = urwid.ProgressBar("pg normal", "pg complete")
-        self._items.extend([urwid.Text("Downloading..."), progressbar])
+        self._items.append(urwid.Text(("progress", "Downloading...")))
         comps = await soaringspot.fetch_competitions()
         self.set_competitions(comps)
 
@@ -73,9 +72,9 @@ class SoaringSpotPickerScreen(Activity):
         self.footer = urwid.Text("")
 
         return urwid.Frame(
-            urwid.Padding(mainview, left=2, right=2),
-            header=urwid.Text("Pick a new competition"),
-            footer=urwid.LineBox(self.footer),
+            widget.CMScreenPadding(mainview),
+            header=widget.CMScreenHeader("Pick a new competition"),
+            footer=widget.CMScreenPadding(self.footer),
         )
 
     def _on_competition_selected(self, ev, comp):

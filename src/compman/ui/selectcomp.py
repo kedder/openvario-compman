@@ -27,8 +27,8 @@ class SelectCompetitionScreen(Activity):
         mainview = urwid.Pile([picker, urwid.Divider(), buttons])
 
         return urwid.Frame(
-            urwid.Filler(mainview, valign=urwid.TOP),
-            header=urwid.Text("Switch competition"),
+            urwid.Filler(widget.CMScreenPadding(mainview), valign=urwid.TOP),
+            header=widget.CMScreenHeader("Switch competition"),
         )
 
     def _populate_stored_comps(self):
@@ -54,9 +54,9 @@ class SelectCompetitionScreen(Activity):
         self.finish(comp)
 
         from compman.ui.compdetails import CompetitionDetailsScreen
+
         details = CompetitionDetailsScreen(self.container)
         details.show()
-
 
     def _on_cancel(self, btn):
         self.finish(None)

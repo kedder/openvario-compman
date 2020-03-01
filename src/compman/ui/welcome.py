@@ -7,17 +7,17 @@ from compman.ui.activity import Activity
 class WelcomeScreen(Activity):
     def create_view(self):
         btxt = urwid.BigText(u"Compman", urwid.font.Thin6x6Font())
-        hpad = urwid.Padding(btxt, "center", "clip")
+        hpad = urwid.Padding(urwid.AttrMap(btxt, "screen header"), "center", "clip")
 
         intro_text = [
-            "Welcome to Competition Manager! ",
+            "Welcome to ", ("screen header", "Competition Manager"), "! ",
             "This app allows you to keep your contest files, ",
             "such as airspace or turnpoint, up to date. ",
             "To begin, pick your competition.",
         ]
 
 
-        add_comp_button = widget.CMButton("Add a Competition")
+        add_comp_button = widget.CMButton("Set Up a Competition")
         self.connect_async(add_comp_button, "click", self._pick_competition)
 
         intro = urwid.Padding(
@@ -27,7 +27,7 @@ class WelcomeScreen(Activity):
                     urwid.Text(intro_text),
                     urwid.Divider(),
                     urwid.GridFlow(
-                        [add_comp_button], 19, 2, 1, "left"
+                        [add_comp_button], 24, 2, 1, "left"
                     ),
                     urwid.Divider(),
                 ]
