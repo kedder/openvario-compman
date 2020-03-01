@@ -55,11 +55,12 @@ class CompetitionDetailsScreen(Activity):
             ]
         )
 
-        self.download_status = urwid.WidgetPlaceholder(nothing)
+        self.download_status = urwid.Text("")
 
         form = urwid.Pile(
             [
                 self.download_status,
+                urwid.Divider(),
                 urwid.Text("Airspace files"),
                 p2(self.airspace_pile),
                 urwid.Divider(),
@@ -72,65 +73,52 @@ class CompetitionDetailsScreen(Activity):
 
         filler = urwid.Filler(form, valign=urwid.TOP)
 
-        self.footer = urwid.Text("")
+        self.status = widget.CMFlashMessage()
 
         return urwid.Frame(
-            urwid.LineBox(filler, "Details", title_align="left"),
-            header=urwid.Text(self.competition.title),
-            footer=self.footer,
+            widget.CMScreenPadding(filler),
+            header=widget.CMScreenHeader(self.competition.title),
+            footer=widget.CMScreenPadding(self.status),
         )
 
     def _create_buttons(self):
-        apply_btn = widget.CMButton("Apply")
-        self.connect_async(
-            apply_btn, "click", self._flash_status, user_args=["Settings applied"]
-        )
-
         exit_btn = widget.CMButton("Main Menu")
         urwid.connect_signal(exit_btn, "click", self._on_exit)
-        return urwid.GridFlow([apply_btn, exit_btn], 22, 2, 1, "left")
+        return urwid.GridFlow([exit_btn], 22, 2, 1, "left")
 
     def _on_airspace_changed(self, ev, new_state, selected):
         if not new_state:
             return
         self.competition.airspace = selected
         storage.save_competition(self.competition)
-        self._flash(f"Airspace changed to: {selected}")
+        self.status.flash(f"Airspace changed to: {selected}")
 
     def _on_waypoint_changed(self, ev, new_state, selected):
         if not new_state:
             return
         self.competition.waypoints = selected
         storage.save_competition(self.competition)
-        self._flash(f"Waypoint changed to: {selected}")
+        self.status.flash(f"Waypoint changed to: {selected}")
 
     def _on_exit(self, btn):
         self.finish(None)
-
-    def _flash(self, message: str):
-        if self._flashtask and not self._flashtask.done():
-            self._flashtask.cancel()
-        self._flashtask = asyncio.create_task(self._flash_status(message))
-
-    async def _flash_status(self, message: str):
-        self.footer.set_text(message)
-        await asyncio.sleep(3.0)
-        self.footer.set_text("")
 
     async def _update_competition_files(self):
         compurl = self.competition.soaringspot_url
         if compurl is None:
             return
 
-        self.download_status.original_widget = urwid.Text("Downloading file list...")
+        self.download_status.set_text(("progress", "Refreshing file list..."))
         downloads = await soaringspot.fetch_downloads(compurl)
         new_airspaces, new_waypoints = self._detect_new_files(downloads)
 
         if not new_airspaces and not new_waypoints:
-            self.download_status.original_widget = nothing
+            self.download_status.set_text(("remark", "No updates"))
             return
 
-        self.download_status.original_widget = urwid.Text("New contest files detected!")
+        self.download_status.set_text(
+            ("success message", "New contest files detected!")
+        )
 
         tasks = []
         tasks.extend(
@@ -177,10 +165,11 @@ class CompetitionDetailsScreen(Activity):
     async def _download_file(
         self, sf: storage.StoredFile, url: str, radio: urwid.RadioButton
     ):
-        radio.set_label(self._make_label(sf, ["Downloading..."]))
+        orig_radio = radio.original_widget
+        orig_radio.set_label(self._make_label(sf, [("progress", "Downloading...")]))
         dlcontents = await soaringspot.fetch_file(url)
         stored = storage.store_file(self.competition.id, sf.name, dlcontents)
-        radio.set_label(self._make_label(stored, ["New!"]))
+        orig_radio.set_label(self._make_label(stored, [("success banner", " New! ")]))
 
     def _make_file_radio(
         self, sf: storage.StoredFile, group, selected: bool, select_handler
@@ -188,7 +177,7 @@ class CompetitionDetailsScreen(Activity):
         label = f"{sf.name} ({sf.format_size()})"
         radio = urwid.RadioButton(group, label, selected)
         urwid.connect_signal(radio, "change", select_handler, sf.name)
-        return radio
+        return urwid.AttrMap(radio, "li normal", "li focus")
 
     def _make_label(self, sf: storage.StoredFile, extra: List[str] = None) -> List[str]:
         label = f"{sf.name} ({sf.format_size()})"

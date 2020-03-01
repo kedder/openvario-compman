@@ -8,7 +8,7 @@ from compman import storage
 
 async def startui(urwidloop):
     container = urwid.WidgetPlaceholder(urwid.SolidFill(" "))
-    urwidloop.widget = container
+    urwidloop.widget = urwid.AttrMap(container, 'bg')
 
     # from compman.ui.welcome import WelcomeScreen
     # screen = WelcomeScreen(container)
@@ -69,7 +69,14 @@ def main() -> None:
         ("pg normal", "white", "black", "standout"),
         ("pg complete", "white", "dark magenta"),
         ("pg smooth", "dark magenta", "black"),
-        ("bg", "dark gray", "black"),
+        ("screen header", "yellow", "black", ""),
+        ("bg", "light gray", "black", ""),
+        ("success message", "light green", "black", ""),
+        ("success banner", "white", "dark green", ""),
+        ("error message", "light red", "black", ""),
+        ("error banner", "white", "dark red", ""),
+        ("progress", "light magenta", "black", ""),
+        ("remark", "dark gray", "black", ""),
     ]
 
     asyncioloop = asyncio.get_event_loop()
