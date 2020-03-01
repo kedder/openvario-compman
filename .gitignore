@@ -3,3 +3,5 @@ __pycache__
 tags
 .tags
 data
+tmp
+*.log
