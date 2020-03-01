@@ -120,6 +120,9 @@ def _get_files(cid: str, ext: str) -> List[StoredFile]:
         files.append(StoredFile(name=entry.name, size=stat.st_size))
     return files
 
+def get_full_file_path(cid: str, fname: str) -> str:
+    return os.path.abspath(os.path.join(_get_compdir(cid), fname.strip()))
+
 
 def exists(cid: str) -> bool:
     configfname = _get_compconfigname(cid)

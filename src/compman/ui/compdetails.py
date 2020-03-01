@@ -7,6 +7,7 @@ import urwid
 from compman import storage
 from compman import soaringspot
 from compman import config
+from compman import xcsoar
 from compman.ui import widget
 from compman.ui.activity import Activity
 
@@ -82,15 +83,19 @@ class CompetitionDetailsScreen(Activity):
         )
 
     def _create_buttons(self):
+        activate_btn = widget.CMButton("Activate")
+        urwid.connect_signal(activate_btn, "click", self._on_activate)
+
         exit_btn = widget.CMButton("Main Menu")
         urwid.connect_signal(exit_btn, "click", self._on_exit)
-        return urwid.GridFlow([exit_btn], 22, 2, 1, "left")
+        return urwid.GridFlow([activate_btn, exit_btn], 22, 2, 1, "left")
 
     def _on_airspace_changed(self, ev, new_state, selected):
         if not new_state:
             return
         self.competition.airspace = selected
         storage.save_competition(self.competition)
+        self._udpate_xcsoar_config(self.competition)
         self.status.flash(f"Airspace changed to: {selected}")
 
     def _on_waypoint_changed(self, ev, new_state, selected):
@@ -98,10 +103,26 @@ class CompetitionDetailsScreen(Activity):
             return
         self.competition.waypoints = selected
         storage.save_competition(self.competition)
+        self._udpate_xcsoar_config(self.competition)
         self.status.flash(f"Waypoint changed to: {selected}")
+
+    def _on_activate(self, btn):
+        xcsprofile = xcsoar.find_xcsoar_profile_filename()
+        self._udpate_xcsoar_config(self.competition)
+        self.status.flash(f"XCSoar profile updated: {xcsprofile}")
 
     def _on_exit(self, btn):
         self.finish(None)
+
+    def _udpate_xcsoar_config(self, comp: storage.StoredCompetition) -> None:
+        try:
+            xcprofile = xcsoar.get_xcsoar_profile()
+            xcprofile.set_airspace(storage.get_full_file_path(comp.id, comp.airspace))
+            xcprofile.set_waypoint(storage.get_full_file_path(comp.id, comp.waypoints))
+            xcprofile.save()
+        except FileNotFoundError as e:
+                log.error(f"XCSoar profile not found: {e}")
+                self.status.flash(f"XCSoar profile not found: file not found: {e}")
 
     async def _update_competition_files(self):
         compurl = self.competition.soaringspot_url

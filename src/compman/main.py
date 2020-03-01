@@ -48,7 +48,7 @@ async def startui(urwidloop):
 def main() -> None:
     # btxt.set_text('hello')
     # Read config
-    logging.basicConfig(filename="compman.log", level=logging.DEBUG)
+    logging.basicConfig(filename="compman.log", level=logging.INFO)
 
     cfg = config.load()
     config.set(cfg)
