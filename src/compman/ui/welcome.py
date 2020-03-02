@@ -14,7 +14,8 @@ class WelcomeScreen(Activity):
 
         intro_text = [
             "Welcome to ",
-            ("screen header", "Competition Manager"), f" version {compman.__version__}",
+            ("screen header", "Competition Manager"),
+            f" version {compman.__version__}",
             "! ",
             "This app allows you to keep your contest files, ",
             "such as airspace or turnpoint, up to date. ",
@@ -58,7 +59,14 @@ class WelcomeScreen(Activity):
         from compman.ui.soaringspot import SoaringSpotPickerScreen
 
         comp = await self.run_activity(SoaringSpotPickerScreen(self.container))
-        if comp is not None:
-            storage.get_settings().current_competition_id = comp.id
-            storage.save_settings()
-            self.finish(comp)
+        if comp is None:
+            return
+
+        storage.get_settings().current_competition_id = comp.id
+        storage.save_settings()
+        self.finish(comp)
+
+        from compman.ui.compdetails import CompetitionDetailsScreen
+
+        details = CompetitionDetailsScreen(self.container)
+        details.show()
