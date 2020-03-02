@@ -1,5 +1,8 @@
+import pkg_resources
+
 import urwid
 
+import compman
 from compman.ui import widget
 from compman.ui.activity import Activity
 from compman.ui.compdetails import CompetitionDetailsScreen
@@ -8,8 +11,8 @@ from compman.ui.selectcomp import SelectCompetitionScreen
 
 class MainMenuScreen(Activity):
     def create_view(self):
-        btxt = urwid.BigText(u"Compman", urwid.font.Thin6x6Font())
-        hpad = urwid.Padding(urwid.AttrMap(btxt, "screen header"), "center", "clip")
+        btxt = urwid.BigText("Compman", urwid.font.Thin6x6Font())
+        hpad = urwid.Padding(urwid.AttrMap(btxt, "screen header"), urwid.CENTER, "clip")
 
         m_select_comp = widget.CMSelectableListItem("Select Competition")
         urwid.connect_signal(
@@ -32,10 +35,11 @@ class MainMenuScreen(Activity):
             urwid.Pile(
                 [
                     hpad,
+                    urwid.Text(self._get_version(), align=urwid.CENTER),
                     urwid.Padding(
                         urwid.LineBox(menu, "Main Menu", title_align="left"),
                         width=("relative", 80),
-                        align="center",
+                        align=urwid.CENTER,
                     ),
                 ]
             ),
@@ -49,3 +53,6 @@ class MainMenuScreen(Activity):
     def _run_screen(self, screen_factory, btn):
         screen = screen_factory(self.container)
         screen.show()
+
+    def _get_version(self) -> str:
+        return f"Version {compman.__version__}"
