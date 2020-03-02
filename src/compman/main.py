@@ -64,11 +64,11 @@ def main() -> None:
     args = parser.parse_args()
     datadir = os.path.expanduser(args.datadir)
 
+    storage.init(datadir)
     logfname = os.path.join(datadir, "compman.log")
     logging.basicConfig(filename=logfname, level=logging.INFO)
     log.info(f"Starting compman with data dir in {datadir}")
 
-    storage.init(datadir)
 
     btxt = urwid.BigText(u"Openvario", urwid.font.Thin6x6Font())
     pad = urwid.Padding(btxt, "center", "clip")
