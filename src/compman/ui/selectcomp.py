@@ -5,7 +5,6 @@ import urwid
 from compman.ui import widget
 from compman.ui.activity import Activity
 from compman import storage
-from compman import config
 
 
 log = logging.getLogger("compman")
@@ -38,8 +37,6 @@ class SelectCompetitionScreen(Activity):
             self._items.append(btn)
 
     def _on_competition_selected(self, btn, comp):
-        config.get().current_competition_id = comp.id
-        config.save()
         self._comp_selected(comp)
 
     async def _on_new_competition(self):
@@ -51,6 +48,9 @@ class SelectCompetitionScreen(Activity):
             self._comp_selected(res)
 
     def _comp_selected(self, comp):
+        storage.get_settings().current_competition_id = comp.id
+        storage.save_settings()
+
         self.finish(comp)
 
         from compman.ui.compdetails import CompetitionDetailsScreen

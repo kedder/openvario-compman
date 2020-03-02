@@ -6,7 +6,6 @@ import urwid
 
 from compman import storage
 from compman import soaringspot
-from compman import config
 from compman import xcsoar
 from compman.ui import widget
 from compman.ui.activity import Activity
@@ -18,7 +17,7 @@ log = logging.getLogger("compman")
 
 class CompetitionDetailsScreen(Activity):
     def show(self):
-        cid = config.get().current_competition_id
+        cid = storage.get_settings().current_competition_id
         self.competition = storage.load_competiton(cid)
         self.airspaces = storage.get_airspace_files(cid)
         self.waypoints = storage.get_waypoint_files(cid)

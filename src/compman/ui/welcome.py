@@ -1,5 +1,7 @@
 """Welcome screen"""
 import urwid
+
+from compman import storage
 from compman.ui import widget
 from compman.ui.activity import Activity
 
@@ -54,6 +56,8 @@ class WelcomeScreen(Activity):
 
     async def _pick_competition(self):
         from compman.ui.soaringspot import SoaringSpotPickerScreen
-        res = await self.run_activity(SoaringSpotPickerScreen(self.container))
-        if res is not None:
-            self.finish(res)
+        comp = await self.run_activity(SoaringSpotPickerScreen(self.container))
+        if comp is not None:
+            storage.get_settings().current_competition_id = comp.id
+            storage.save_settings()
+            self.finish(comp)

@@ -1,10 +1,25 @@
 from typing import Optional, Dict, Any, List, IO
+import logging
 import os
 import json
 from dataclasses import dataclass
 
+_DATADIR: str
+_SETTINGS: Optional["Settings"] = None
 
-from compman import config
+log = logging.getLogger("compman")
+
+
+@dataclass
+class Settings:
+    current_competition_id: Optional[str] = None
+
+    @classmethod
+    def fromdict(cls, data: Dict[str, Any]) -> "Settings":
+        return cls(current_competition_id=data.get("current_competition_id"))
+
+    def asdict(self) -> Dict[str, Any]:
+        return {"current_competition_id": self.current_competition_id}
 
 
 @dataclass
@@ -51,9 +66,36 @@ class StoredFile:
         return "%.1f%s%s" % (self.size, "Yi", suffix)
 
 
-def init() -> None:
-    datadir = config.get().datadir
+def init(datadir: str) -> None:
+    global _DATADIR
+    _DATADIR = datadir
     os.makedirs(datadir, mode=0o755, exist_ok=True)
+
+
+def get_settings() -> Settings:
+    global _SETTINGS
+    if _SETTINGS is None:
+        # Load settings from the file
+        fname = _get_settings_fname()
+        if os.path.exists(fname):
+            with open(fname) as f:
+                try:
+                    data = json.load(f)
+                except json.decoder.JSONDecodeError:
+                    log.error(f"Cannot load settings file: {fname}")
+                    data = {}
+        else:
+            data = {}
+        _SETTINGS = Settings.fromdict(data)
+
+    return _SETTINGS
+
+
+def save_settings() -> None:
+    settings = get_settings()
+    fname = _get_settings_fname()
+    with open(fname, "w") as f:
+        json.dump(settings.asdict(), f, indent=2)
 
 
 def save_competition(comp: StoredCompetition) -> None:
@@ -80,9 +122,8 @@ def load_competiton(cid: str) -> Optional[StoredCompetition]:
 
 
 def list_competitions() -> List[StoredCompetition]:
-    datadir = config.get().datadir
     competitions = []
-    for cid in os.listdir(datadir):
+    for cid in os.listdir(_DATADIR):
         if not exists(cid):
             continue
         comp = load_competiton(cid)
@@ -120,6 +161,7 @@ def _get_files(cid: str, ext: str) -> List[StoredFile]:
         files.append(StoredFile(name=entry.name, size=stat.st_size))
     return files
 
+
 def get_full_file_path(cid: str, fname: str) -> str:
     return os.path.abspath(os.path.join(_get_compdir(cid), fname.strip()))
 
@@ -130,10 +172,13 @@ def exists(cid: str) -> bool:
 
 
 def _get_compdir(cid: str) -> str:
-    datadir = config.get().datadir
-    return os.path.join(datadir, cid)
+    return os.path.join(_DATADIR, cid)
 
 
 def _get_compconfigname(cid: str) -> str:
     compdir = _get_compdir(cid)
     return os.path.join(compdir, "competition.json")
+
+
+def _get_settings_fname() -> str:
+    return os.path.join(_DATADIR, "settings.json")

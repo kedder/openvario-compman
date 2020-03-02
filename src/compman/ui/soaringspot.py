@@ -1,11 +1,9 @@
 from typing import List
-import asyncio
 
 import urwid
 
 from compman import soaringspot
 from compman import storage
-from compman import config
 from compman.ui.activity import Activity
 from compman.ui import widget
 
@@ -78,8 +76,6 @@ class SoaringSpotPickerScreen(Activity):
         )
 
     def _on_competition_selected(self, ev, comp):
-        config.get().current_competition_id = comp.id
-        config.save()
         self.finish(comp)
 
     def _on_comp_focused(self, ev, comp):

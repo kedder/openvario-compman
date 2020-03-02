@@ -1,14 +1,29 @@
-import urwid
+import os
 import asyncio
 import logging
+import argparse
 
-from compman import config
+import urwid
+
 from compman import storage
+
+log = logging.getLogger("compman")
+
+
+parser = argparse.ArgumentParser(description="test")
+parser.add_argument(
+    "--datadir",
+    default=os.environ.get("COMPMAN_DATADIR", "~/.compman"),
+    help=(
+        "Path to directory where compman stores data. By default "
+        "~/.compman. Also can be set with COMPMAN_DATADIR environment variable"
+    ),
+)
 
 
 async def startui(urwidloop):
     container = urwid.WidgetPlaceholder(urwid.SolidFill(" "))
-    urwidloop.widget = urwid.AttrMap(container, 'bg')
+    urwidloop.widget = urwid.AttrMap(container, "bg")
 
     # from compman.ui.welcome import WelcomeScreen
     # screen = WelcomeScreen(container)
@@ -19,7 +34,6 @@ async def startui(urwidloop):
     # from compman.ui.selectcomp import SelectCompetitionScreen
     # screen = SelectCompetitionScreen(container)
     # await screen.response
-
 
     # def_comp_id = config.get().current_competition_id
     # comp = None
@@ -38,6 +52,7 @@ async def startui(urwidloop):
     # await screen.response
 
     from compman.ui.mainmenu import MainMenuScreen
+
     screen = MainMenuScreen(container)
     screen.show()
     await screen.response
@@ -46,16 +61,15 @@ async def startui(urwidloop):
 
 
 def main() -> None:
-    # btxt.set_text('hello')
-    # Read config
-    logging.basicConfig(filename="compman.log", level=logging.INFO)
+    args = parser.parse_args()
+    datadir = os.path.expanduser(args.datadir)
 
-    cfg = config.load()
-    config.set(cfg)
+    logfname = os.path.join(datadir, "compman.log")
+    logging.basicConfig(filename=logfname, level=logging.INFO)
+    log.info(f"Starting compman with data dir in {datadir}")
 
-    storage.init()
+    storage.init(datadir)
 
-    # mainwidget = urwid.SolidFill('X')
     btxt = urwid.BigText(u"Openvario", urwid.font.Thin6x6Font())
     pad = urwid.Padding(btxt, "center", "clip")
     intro = urwid.Filler(pad, "middle")
