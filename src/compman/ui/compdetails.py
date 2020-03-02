@@ -116,8 +116,10 @@ class CompetitionDetailsScreen(Activity):
     def _udpate_xcsoar_config(self, comp: storage.StoredCompetition) -> None:
         try:
             xcprofile = xcsoar.get_xcsoar_profile()
-            xcprofile.set_airspace(storage.get_full_file_path(comp.id, comp.airspace))
-            xcprofile.set_waypoint(storage.get_full_file_path(comp.id, comp.waypoints))
+            if comp.airspace:
+                xcprofile.set_airspace(storage.get_full_file_path(comp.id, comp.airspace))
+            if comp.waypoints:
+                xcprofile.set_waypoint(storage.get_full_file_path(comp.id, comp.waypoints))
             xcprofile.save()
         except FileNotFoundError as e:
                 log.error(f"XCSoar profile not found: {e}")
