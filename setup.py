@@ -28,8 +28,8 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),  # Required
     python_requires=">=3.6, <4",
-    install_requires=["urwid"],
-    extras_require={"dev": [], "test": []},
+    install_requires=["urwid", "aiohttp", "lxml"],
+    extras_require={"dev": [], "test": ["pytest", "pytest-coverage", "pytest-asyncio"]},
     package_data={},
     data_files=[],
     entry_points={"console_scripts": ["compman=compman.main:main"]},
