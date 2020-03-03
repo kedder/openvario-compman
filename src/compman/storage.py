@@ -63,32 +63,41 @@ class StoredFile:
             if abs(self.size) < 1024.0:
                 return "%3.1f%s%s" % (self.size, unit, suffix)
             self.size /= 1024.0
-        return "%.1f%s%s" % (self.size, "Yi", suffix)
+        return "%.1f%s%s" % (self.size, "Ti", suffix)
 
 
 def init(datadir: str) -> None:
-    global _DATADIR
+    global _DATADIR, _SETTINGS
     _DATADIR = datadir
     os.makedirs(datadir, mode=0o755, exist_ok=True)
+    _SETTINGS = None
+
+def deinit() -> None:
+    global _DATADIR, _SETTINGS
+    _DATADIR = None
+    _SETTINGS = None
 
 
 def get_settings() -> Settings:
     global _SETTINGS
     if _SETTINGS is None:
-        # Load settings from the file
-        fname = _get_settings_fname()
-        if os.path.exists(fname):
-            with open(fname) as f:
-                try:
-                    data = json.load(f)
-                except json.decoder.JSONDecodeError:
-                    log.error(f"Cannot load settings file: {fname}")
-                    data = {}
-        else:
-            data = {}
-        _SETTINGS = Settings.fromdict(data)
+        _SETTINGS = load_settings()
 
     return _SETTINGS
+
+
+def load_settings() -> Settings:
+    fname = _get_settings_fname()
+    if os.path.exists(fname):
+        with open(fname) as f:
+            try:
+                data = json.load(f)
+            except json.decoder.JSONDecodeError:
+                log.error(f"Cannot load settings file: {fname}")
+                data = {}
+    else:
+        data = {}
+    return Settings.fromdict(data)
 
 
 def save_settings() -> None:
@@ -110,7 +119,7 @@ def save_competition(comp: StoredCompetition) -> None:
         f.write("\n")
 
 
-def load_competiton(cid: str) -> Optional[StoredCompetition]:
+def load_competition(cid: str) -> Optional[StoredCompetition]:
     if not exists(cid):
         return None
 
@@ -126,7 +135,7 @@ def list_competitions() -> List[StoredCompetition]:
     for cid in os.listdir(_DATADIR):
         if not exists(cid):
             continue
-        comp = load_competiton(cid)
+        comp = load_competition(cid)
         competitions.append(comp)
 
     return competitions

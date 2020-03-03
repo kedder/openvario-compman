@@ -45,7 +45,7 @@ class SoaringSpotPicker(urwid.ListBox):
     def _on_competition_selected(
         self, btn: urwid.Widget, sscomp: soaringspot.SoaringSpotContest
     ) -> None:
-        existing = storage.load_competiton(sscomp.id)
+        existing = storage.load_competition(sscomp.id)
         if existing is not None:
             self._emit("select", existing)
             return

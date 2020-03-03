@@ -18,7 +18,7 @@ log = logging.getLogger("compman")
 class CompetitionDetailsScreen(Activity):
     def show(self):
         cid = storage.get_settings().current_competition_id
-        self.competition = storage.load_competiton(cid)
+        self.competition = storage.load_competition(cid)
         self.airspaces = storage.get_airspace_files(cid)
         self.waypoints = storage.get_waypoint_files(cid)
 
