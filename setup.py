@@ -30,7 +30,7 @@ setup(
     python_requires=">=3.6, <4",
     install_requires=["urwid", "aiohttp", "lxml"],
     extras_require={
-        "dev": ["black"],
+        "dev": ["black", "mypy"],
         "test": ["pytest", "pytest-coverage", "pytest-asyncio"],
     },
     package_data={},

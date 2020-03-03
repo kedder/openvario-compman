@@ -8,5 +8,6 @@ install:
 script:
   - pytest --cov=compman --cov-report=term tests
   - black --check setup.py src tests
+  - mypy src tests
 after_success:
   coveralls
