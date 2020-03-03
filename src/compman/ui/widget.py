@@ -50,7 +50,7 @@ class CMScreenHeader(urwid.WidgetWrap):
 
 
 class CMFlashMessage(urwid.WidgetWrap):
-    _flashtask: Optional[asyncio.Task[None]]
+    _flashtask: Optional[asyncio.Task]
 
     def __init__(self) -> None:
         self.text = urwid.Text("")
