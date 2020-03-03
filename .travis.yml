@@ -3,9 +3,10 @@ language: python
 python:
   - "3.7"
 install:
-  - pip install -e .[test]
+  - pip install -e .[test,dev]
   - pip install coveralls
 script:
   - pytest --cov=compman --cov-report=term tests
+  - black --check setup.py src tests
 after_success:
   coveralls
