@@ -117,13 +117,17 @@ class CompetitionDetailsScreen(Activity):
         try:
             xcprofile = xcsoar.get_xcsoar_profile()
             if comp.airspace:
-                xcprofile.set_airspace(storage.get_full_file_path(comp.id, comp.airspace))
+                xcprofile.set_airspace(
+                    storage.get_full_file_path(comp.id, comp.airspace)
+                )
             if comp.waypoints:
-                xcprofile.set_waypoint(storage.get_full_file_path(comp.id, comp.waypoints))
+                xcprofile.set_waypoint(
+                    storage.get_full_file_path(comp.id, comp.waypoints)
+                )
             xcprofile.save()
         except FileNotFoundError as e:
-                log.error(f"XCSoar profile not found: {e}")
-                self.status.flash(f"XCSoar profile not found: file not found: {e}")
+            log.error(f"XCSoar profile not found: {e}")
+            self.status.flash(f"XCSoar profile not found: file not found: {e}")
 
     async def _update_competition_files(self):
         compurl = self.competition.soaringspot_url

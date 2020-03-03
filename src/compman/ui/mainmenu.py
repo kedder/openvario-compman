@@ -14,6 +14,7 @@ class MainMenuScreen(Activity):
 
         if storage.get_settings().current_competition_id is None:
             from compman.ui.welcome import WelcomeScreen
+
             self._run_screen(WelcomeScreen)
         else:
             self._run_screen(CompetitionDetailsScreen)

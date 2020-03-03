@@ -72,6 +72,7 @@ def init(datadir: str) -> None:
     os.makedirs(datadir, mode=0o755, exist_ok=True)
     _SETTINGS = None
 
+
 def deinit() -> None:
     global _DATADIR, _SETTINGS
     _DATADIR = None

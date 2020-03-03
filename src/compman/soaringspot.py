@@ -102,4 +102,4 @@ def _extract_text(els) -> str:
 
 
 def _sanitize_url(url: str) -> str:
-    return url.rstrip('/')
+    return url.rstrip("/")
