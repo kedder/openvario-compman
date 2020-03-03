@@ -13,23 +13,25 @@ class Activity:
         self.container = container
         self.response = asyncio.Future()
 
+    def create_view(self) -> urwid.Widget:
+        raise NotImplementedError()
+
     def show(self):
-        self._tasks = []
+        self._tasks = set()
         self._previous_widget = self.container.original_widget
         self.container.original_widget = widget.CMGlobalCommands(
             self.create_view(), self
         )
 
     def finish(self, result):
-        # Cancel any outstanding tasks
-        for t in self._tasks:
-            t.cancel()
+        # Cancel any outstanding tasks on a next event loop iteration to avoid
+        # cancelling the task that calls finish() right now.
+        asyncio.get_running_loop().call_soon(self._cancel_outstanding_tasks)
 
+        # Restore the prvious UI
         self.container.original_widget = self._previous_widget
-        self.response.set_result(result)
 
-    def create_view(self) -> urwid.Widget:
-        raise NotImplementedError()
+        self.response.set_result(result)
 
     def connect_async(self, widget, signal, handler_coro, user_args=None):
         urwid.connect_signal(
@@ -39,25 +41,42 @@ class Activity:
             user_args=[handler_coro, user_args or []],
         )
 
-    def _async_handler(self, handler_coro, args, widget):
-        task = asyncio.create_task(self._logged_exceptions(handler_coro(*args)))
-        self._tasks.append(task)
-
-    def async_task(self, coro):
-        log.info("Starting task {coro}")
-        task = asyncio.create_task(self._logged_exceptions(coro))
-        self._tasks.append(task)
-
     async def run_activity(self, act: "Activity"):
-        log.info(f"Running activity {act.__class__}")
+        log.debug(f"Running activity {act.__class__}")
         act.show()
         resp = await act.response
-        log.info(f"Activity {act.__class__} completed with {resp}")
+        log.debug(f"Activity {act.__class__} completed with {resp}")
         return resp
 
-    async def _logged_exceptions(self, coro):
-        try:
-            return await coro
-        except Exception:
-            log.exception("Exception in activity async task")
-            raise
+    def async_task(self, coro):
+        task = asyncio.create_task(coro)
+        log.debug(f"Started {task}")
+        task.add_done_callback(self._task_done)
+        self._tasks.add(task)
+        return task
+
+    def _async_handler(self, handler_coro, args, widget):
+        coro = handler_coro(*args)
+        return self.async_task(coro)
+
+    def _cancel_outstanding_tasks(self):
+        # Cancel any outstanding tasks
+        notdone = [t for t in self._tasks if not t.done()]
+        if notdone:
+            log.info(
+                f"Cancelling {len(notdone)} outstanding tasks "
+                f"for {self.__class__.__name__}"
+            )
+        for t in notdone:
+            t.cancel()
+
+    def _task_done(self, task):
+        self._tasks.remove(task)
+        if task.cancelled():
+            log.debug(f"Cancelled: {task}")
+            return
+        exc = task.exception()
+        if exc is not None:
+            log.error(f"Failed: {task}", exc_info=exc)
+        else:
+            log.debug(f"Completed: {task}")
