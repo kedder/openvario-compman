@@ -1,3 +1,4 @@
+from typing import Optional
 import asyncio
 import logging
 
@@ -49,12 +50,14 @@ class CMScreenHeader(urwid.WidgetWrap):
 
 
 class CMFlashMessage(urwid.WidgetWrap):
+    _flashtask: Optional[asyncio.Task[None]]
+
     def __init__(self) -> None:
         self.text = urwid.Text("")
         self._flashtask = None
         super().__init__(self.text)
 
-    def flash(self, markup: str):
+    def flash(self, markup: str) -> None:
         if self._flashtask and not self._flashtask.done():
             self._flashtask.cancel()
         self._flashtask = asyncio.create_task(self._flash_status(markup))

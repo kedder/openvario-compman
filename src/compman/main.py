@@ -70,7 +70,7 @@ def main() -> None:
     asyncioloop.set_debug(True)
     evl = urwid.AsyncioEventLoop(loop=asyncioloop)
     urwidloop = urwid.MainLoop(intro, palette=palette, event_loop=evl)
-    global amain
+
     amain = startui(urwidloop)
     asyncioloop.create_task(amain)
     try:

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union, Tuple, cast
 import logging
 import asyncio
 
@@ -13,6 +13,8 @@ from compman.ui.activity import Activity
 nothing = urwid.Pile([])
 
 log = logging.getLogger("compman")
+
+UrwidMarkup = List[Union[str, Tuple[str, str]]]
 
 
 class CompetitionDetailsScreen(Activity):
@@ -205,6 +207,10 @@ class CompetitionDetailsScreen(Activity):
         urwid.connect_signal(radio, "change", select_handler, sf.name)
         return urwid.AttrMap(radio, "li normal", "li focus")
 
-    def _make_label(self, sf: storage.StoredFile, extra: List[str] = None) -> List[str]:
+    def _make_label(
+        self, sf: storage.StoredFile, extra: UrwidMarkup = None
+    ) -> UrwidMarkup:
         label = f"{sf.name} ({sf.format_size()})"
-        return [label, " "] + (extra or [])
+        markup = cast(UrwidMarkup, [label, " "])
+        markup.extend(extra or [])
+        return markup

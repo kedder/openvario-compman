@@ -93,7 +93,7 @@ async def fetch_file(file_url: str) -> IO[bytes]:
 
 
 def _extract_text(els) -> str:
-    texts = []
+    texts: List[str] = []
     for el in els:
         texts.extend(el.itertext())
 

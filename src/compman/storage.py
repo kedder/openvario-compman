@@ -4,7 +4,7 @@ import os
 import json
 from dataclasses import dataclass
 
-_DATADIR: str
+_DATADIR: Optional[str]
 _SETTINGS: Optional["Settings"] = None
 
 log = logging.getLogger("compman")
@@ -134,9 +134,9 @@ def load_competition(cid: str) -> Optional[StoredCompetition]:
 def list_competitions() -> List[StoredCompetition]:
     competitions = []
     for cid in os.listdir(_DATADIR):
-        if not exists(cid):
-            continue
         comp = load_competition(cid)
+        if comp is None:
+            continue
         competitions.append(comp)
 
     return competitions
@@ -182,6 +182,7 @@ def exists(cid: str) -> bool:
 
 
 def _get_compdir(cid: str) -> str:
+    assert _DATADIR
     return os.path.join(_DATADIR, cid)
 
 
@@ -191,4 +192,5 @@ def _get_compconfigname(cid: str) -> str:
 
 
 def _get_settings_fname() -> str:
+    assert _DATADIR
     return os.path.join(_DATADIR, "settings.json")

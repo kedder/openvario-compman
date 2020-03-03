@@ -100,14 +100,15 @@ def test_load_competition_existing(storage_dir) -> None:
     storage.save_competition(comp)
 
     # WHEN
-    comp = storage.load_competition("first")
+    loaded = storage.load_competition("first")
+    assert loaded is not None
 
     # THEN
-    assert comp.id == "first"
-    assert comp.title == "First Competition"
-    assert comp.soaringspot_url == "http://localhost"
-    assert comp.airspace == "airspace.txt"
-    assert comp.waypoints == None
+    assert loaded.id == "first"
+    assert loaded.title == "First Competition"
+    assert loaded.soaringspot_url == "http://localhost"
+    assert loaded.airspace == "airspace.txt"
+    assert loaded.waypoints == None
 
 
 def test_store_file(storage_dir) -> None:
