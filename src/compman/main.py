@@ -41,7 +41,7 @@ def main() -> None:
     storage.init(datadir)
     logfname = os.path.join(datadir, "compman.log")
     logging.basicConfig(filename=logfname, level=logging.INFO)
-    log.info(f"Starting compman with data dir in {datadir}")
+    log.info(f"Starting compman with data dir in '{datadir}'")
 
     btxt = urwid.BigText("Openvario", urwid.font.Thin6x6Font())
     pad = urwid.Padding(btxt, "center", "clip")
@@ -75,5 +75,7 @@ def main() -> None:
     asyncioloop.create_task(amain)
     try:
         urwidloop.run()
+        log.info("Exiting normally")
     except KeyboardInterrupt:
+        log.info("Killed")
         pass
