@@ -1,13 +1,9 @@
-# Competiton Manager for OpenVario
+# Gliding Competiton Manager for OpenVario
 
 [![Build Status](https://travis-ci.com/kedder/openvario-compman.svg?branch=master)](https://travis-ci.com/kedder/openvario-compman)
 [![Coverage Status](https://coveralls.io/repos/github/kedder/openvario-compman/badge.svg?branch=master)](https://coveralls.io/github/kedder/openvario-compman?branch=master)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-
-Competition manager (aka `compman`) app for OpenVario flight computer manages
-competition related files and automatically installs them to the XCSoar
-profile.
 
 This application is intended for glider pilots participating in gliding
 competitions, published on [Soaring Spot](https://soaringspot.com). It runs on
@@ -21,10 +17,33 @@ It is a text-mode application with no graphics, which might look primitive for
 modern graphics-rich UI standards. However, it is written using modern software
 engineering techniques, responsive, very fast and easy to use with very limited
 input controls available for OpenVario. It also has a fairly simple code, that
-is easy to understand and change. The code runs on any computer with python
-interpreter installed, not just target OpenVario device.
+is easy to understand and change.
 
 [![asciicast](https://asciinema.org/a/307125.svg)](https://asciinema.org/a/307125)
+
+## Usage
+
+This app requires Internet connection to be useful. Simplest way to get it  on
+your OpenVerio device is to use a small USB WiFi dongle. See "Installation
+instructions" below for more details.
+
+Typically, during the gliding competition, you run `compman` daily to check if
+new competition files were uploaded to Soaring Spot (or when new files are
+announced during the briefing). When `compman` is started, new files for the
+current competition will be automatically downloaded to the device. As soon as
+you select these new files, XCSoar will be configured to use them. Simply exit
+`compman` and run the XCSoar the usual way.
+
+When you go to the next competition, simply switch the contest using `compman`
+menu system. All competition files will be automatically downloaded and XCSoar
+will be reconfigured.
+
+No more complicated downloading of files on the flash drives and transferring
+them manually to the OpenVario!
+
+`compman` can be operated using only 6 buttons: 4 arrow keys for navigating,
+<kbd>Enter</kbd> (usually a push on rotary encoder or joystick) for selecting
+items and <kbd>Esc</kbd> (usually marked as <kbd>X</kbd>) for going back.
 
 ## Installation
 
@@ -43,21 +62,21 @@ of free options for Windows as well.
 don't have it yet, install with:
 
 ```sh
-pip install pipenv
+$ pip install pipenv
 ```
 
 After checking out the sources, `cd` to `openvario-compman` directory and run:
 
 ```sh
-pipenv shell
-pipenv install
+$ pipenv shell
+$ pipenv install
 ```
 
 After that, your development environment is ready, you should be able to run
 the app:
 
 ```sh
-compman
+$ compman
 ```
 
 It is possible to adjust few options by providing them in `.env` file, located
@@ -72,6 +91,15 @@ available through `make` program. Most useful are these:
 * `make test` - runs the test suite
 * `make mypy` - checks the sources with static type checker
 * `make black` - reformats the source code to match the code style
+
+It is often useful to watch the log file while running `compman` in development
+environment. The log file will contain traces of actions user makes and
+tracebacks from exceptions happening during the execution. Use `tail` to watch
+the logs in a separate terminal window:
+
+```sh
+$ tail -F ~/.compman/compman.log
+```
 
 ### Filesystem
 
