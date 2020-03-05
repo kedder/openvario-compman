@@ -51,8 +51,6 @@ At this stage of development (early preview), installation requires access to
 Internet and local network. You will also need to be able to ssh to the device
 or connect to it through standard serial port for debugging.
 
-### Compman
-
 Assuming the network connection is up and you are connected to the device with
 SSH or serial cable, use `opkg` package manager to download and install `compman`:
 
@@ -60,6 +58,7 @@ SSH or serial cable, use `opkg` package manager to download and install `compman
 $ echo src compman http://openvario.lebedev.lt/opkg >> /etc/opkg/customfeeds.conf
 $ opkg update
 $ opkg install openvario-compman
+$ opkg install ovmenu-compman
 ```
 
 At this point you should be able to run compman from command line:
@@ -68,18 +67,7 @@ At this point you should be able to run compman from command line:
 $ compman
 ```
 
-### Main menu
-
-Currently, the main menu is just a script with hardcoded menu entries. To add
-another entry you need to change this script:
-
-```
-$ wget https://.../ovmenu.patch
-$ patch -p0 < ovmenu.patch
-```
-
-Reboot your OpenVario and you should see the new menu item for `compman`!
-
+Reboot your OpenVario and you should also see the new menu item for `compman`!
 
 ## Developing
 
