@@ -18,7 +18,7 @@ setup(
     author_email="andrey.lebedev@gmail.com",
     classifiers=[
         "Development Status :: 3 - Alpha",
-        "Intended Audience :: End Users/Desktop"
+        "Intended Audience :: End Users/Desktop",
         "OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
