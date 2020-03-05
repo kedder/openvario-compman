@@ -13,7 +13,7 @@ setup(
     description="Competition Manager for OpenVario",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/kedder/compman",
+    url="https://github.com/kedder/openvario-compman",
     author="Andrey Lebedev",
     author_email="andrey.lebedev@gmail.com",
     classifiers=[
