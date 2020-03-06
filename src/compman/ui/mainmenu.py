@@ -19,6 +19,10 @@ class MainMenuScreen(Activity):
         else:
             self._run_screen(CompetitionDetailsScreen)
 
+    def finish(self, result) -> None:
+        super().finish(result)
+        raise urwid.ExitMainLoop()
+
     def create_view(self):
         btxt = urwid.BigText("Compman", urwid.font.Thin6x6Font())
         hpad = urwid.Padding(urwid.AttrMap(btxt, "screen header"), urwid.CENTER, "clip")
@@ -57,7 +61,7 @@ class MainMenuScreen(Activity):
         return view
 
     def _on_exit(self, btn):
-        self.response.set_result(None)
+        self.finish(None)
 
     def _run_screen(self, screen_factory, btn=None):
         screen = screen_factory(self.container)

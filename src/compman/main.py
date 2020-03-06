@@ -21,7 +21,11 @@ parser.add_argument(
 )
 
 
-async def startui(urwidloop):
+def startui(urwidloop):
+    # Show the splash screen as soon as possible
+    urwidloop.draw_screen()
+
+    # We can now import and show the main menu screen
     container = urwid.WidgetPlaceholder(urwid.SolidFill(" "))
     urwidloop.widget = urwid.AttrMap(container, "bg")
 
@@ -29,9 +33,6 @@ async def startui(urwidloop):
 
     screen = MainMenuScreen(container)
     screen.show()
-    await screen.response
-
-    raise urwid.ExitMainLoop()
 
 
 def main() -> None:
@@ -42,10 +43,6 @@ def main() -> None:
     logfname = os.path.join(datadir, "compman.log")
     logging.basicConfig(filename=logfname, level=logging.INFO)
     log.info(f"Starting compman with data dir in '{datadir}'")
-
-    btxt = urwid.BigText("Openvario", urwid.font.Thin6x6Font())
-    pad = urwid.Padding(btxt, "center", "clip")
-    intro = urwid.Filler(pad, "middle")
 
     palette = [
         ("text", "white", "black", ""),
@@ -69,13 +66,14 @@ def main() -> None:
     asyncioloop = asyncio.get_event_loop()
     asyncioloop.set_debug(True)
     evl = urwid.AsyncioEventLoop(loop=asyncioloop)
-    urwidloop = urwid.MainLoop(intro, palette=palette, event_loop=evl)
 
-    amain = startui(urwidloop)
-    asyncioloop.create_task(amain)
+    btxt = urwid.BigText("Openvario", urwid.font.Thin6x6Font())
+    splash = urwid.Filler(urwid.Padding(btxt, "center", "clip"), "middle")
+    urwidloop = urwid.MainLoop(splash, palette=palette, event_loop=evl)
+
+    asyncioloop.call_soon(startui, urwidloop)
     try:
         urwidloop.run()
         log.info("Exiting normally")
     except KeyboardInterrupt:
         log.info("Killed")
-        pass
