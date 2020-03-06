@@ -9,37 +9,34 @@ This application is intended for glider pilots participating in gliding
 competitions, published on [Soaring Spot](https://soaringspot.com). It runs on
 [OpenVario](https://openvario.org/) flight computer and automatically downloads
 current contest airspace and waypoint files when they are published on Soaring
-Spot. It also configures [XCSoar](https://xcsoar.org/) to use the updated
-files. You can switch between contests easily without need to download and
-transfer files to the flight computer manually.
+Spot. `compman` also configures [XCSoar](https://xcsoar.org/) to use the
+updated files. You can switch between contests easily without need to download
+and transfer files to the flight computer manually.
 
-It is a text-mode application with no graphics, which might look primitive for
-modern graphics-rich UI standards. However, it is written using modern software
-engineering techniques, responsive, very fast and easy to use with very limited
-input controls available for OpenVario. It also has a fairly simple code, that
-is easy to understand and change.
+It is a text-mode application, which might look primitive for modern
+graphics-rich UI standards. However, it is written using contemporary software
+engineering techniques, responsive, very fast and easy to use, even with very
+limited input controls available for OpenVario. It also has a fairly simple
+code, that makes `openvario` easy to understand and change.
 
 [![asciicast](https://asciinema.org/a/307125.svg)](https://asciinema.org/a/307125)
 
 ## Usage
 
-This app requires Internet connection to be useful. Simplest way to get it  on
-your OpenVerio device is to use a small USB WiFi dongle. See "Installation
-instructions" below for more details.
+This app requires Internet connection to be useful. The simplest way to get it
+on your OpenVerio is to use a small USB WiFi dongle.
 
 Typically, during the gliding competition, you run `compman` daily to check if
 new competition files were uploaded to Soaring Spot (or when new files are
 announced during the briefing). When `compman` is started, new files for the
 current competition will be automatically downloaded to the device. As soon as
-you select these new files, XCSoar will be configured to use them. Simply exit
+you select them, XCSoar will be reconfigured to use these files. Simply exit
 `compman` and run the XCSoar the usual way.
 
 When you go to the next competition, simply switch the contest using `compman`
 menu system. All competition files will be automatically downloaded and XCSoar
-will be reconfigured.
-
-No more complicated downloading of files on the flash drives and transferring
-them manually to the OpenVario!
+will be reconfigured. No more complicated downloading of files on the flash
+drives and transferring them manually to the OpenVario!
 
 `compman` can be operated using only 6 buttons: 4 arrow keys for navigating,
 <kbd>Enter</kbd> (usually a push on rotary encoder or joystick) for selecting
@@ -47,12 +44,10 @@ items and <kbd>Esc</kbd> (usually marked as <kbd>X</kbd>) for going back.
 
 ## Installation
 
-At this stage of development (early preview), installation requires access to
-Internet and local network. You will also need to be able to ssh to the device
-or connect to it through standard serial port for debugging.
-
-Assuming the network connection is up and you are connected to the device with
-SSH or serial cable, use `opkg` package manager to download and install `compman`:
+To install `compman` on your OpenVario you will also need to be able to ssh to
+the device or connect to it through standard debugging serial port. Assuming
+the network connection is up, use `opkg` package manager to download and
+install `compman`:
 
 ```
 $ echo src compman http://openvario.lebedev.lt/opkg >> /etc/opkg/customfeeds.conf
