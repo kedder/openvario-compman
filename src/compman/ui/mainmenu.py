@@ -4,8 +4,6 @@ import compman
 from compman import storage
 from compman.ui import widget
 from compman.ui.activity import Activity
-from compman.ui.compdetails import CompetitionDetailsScreen
-from compman.ui.selectcomp import SelectCompetitionScreen
 
 
 class MainMenuScreen(Activity):
@@ -13,11 +11,9 @@ class MainMenuScreen(Activity):
         super().show()
 
         if storage.get_settings().current_competition_id is None:
-            from compman.ui.welcome import WelcomeScreen
-
-            self._run_screen(WelcomeScreen)
+            self._run_screen("welcome")
         else:
-            self._run_screen(CompetitionDetailsScreen)
+            self._run_screen("details")
 
     def finish(self, result) -> None:
         super().finish(result)
@@ -29,15 +25,12 @@ class MainMenuScreen(Activity):
 
         m_select_comp = widget.CMSelectableListItem("Select Competition")
         urwid.connect_signal(
-            m_select_comp,
-            "click",
-            self._run_screen,
-            user_args=[SelectCompetitionScreen],
+            m_select_comp, "click", self._run_screen, user_args=["select"]
         )
 
         m_details = widget.CMSelectableListItem("Current Competition")
         urwid.connect_signal(
-            m_details, "click", self._run_screen, user_args=[CompetitionDetailsScreen]
+            m_details, "click", self._run_screen, user_args=["details"]
         )
         m_exit = widget.CMSelectableListItem("Exit")
         urwid.connect_signal(m_exit, "click", self._on_exit)
@@ -63,8 +56,22 @@ class MainMenuScreen(Activity):
     def _on_exit(self, btn):
         self.finish(None)
 
-    def _run_screen(self, screen_factory, btn=None):
-        screen = screen_factory(self.container)
+    def _run_screen(self, screen_name, btn=None):
+        # We want to import screen class as late as possible to avoid delays
+        if screen_name == "welcome":
+            from compman.ui.welcome import WelcomeScreen
+
+            screen = WelcomeScreen(self.container)
+        elif screen_name == "select":
+            from compman.ui.selectcomp import SelectCompetitionScreen
+
+            screen = SelectCompetitionScreen(self.container)
+        elif screen_name == "details":
+            from compman.ui.compdetails import CompetitionDetailsScreen
+
+            screen = CompetitionDetailsScreen(self.container)
+        else:
+            raise RuntimeError(f"Unknown screen name: '{screen_name}")
         screen.show()
 
     def _get_version(self) -> str:
