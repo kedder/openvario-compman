@@ -35,6 +35,29 @@ def startui(urwidloop):
     screen.show()
 
 
+def debounce_esc(keys, raw):
+    # For some weird reason, SteFly remote stick sends two "Escape" key presses
+    # when user presses X button once. Whatever reason might be, this is a
+    # permanent deision and we have to deal with that. We still want to handle
+    # single escape keypresses though, to support input devices that behave
+    # sanely.
+    filtered = []
+    escpressed = False
+    for k in keys:
+        if k == "esc":
+            if escpressed:
+                escpressed = False
+                filtered.append(k)
+            else:
+                escpressed = True
+        else:
+            escpressed = False
+            filtered.append(k)
+    if escpressed:
+        filtered.append("esc")
+    return filtered
+
+
 def main() -> None:
     args = parser.parse_args()
     datadir = os.path.expanduser(args.datadir)
@@ -69,7 +92,9 @@ def main() -> None:
 
     btxt = urwid.BigText("Openvario", urwid.font.Thin6x6Font())
     splash = urwid.Filler(urwid.Padding(btxt, "center", "clip"), "middle")
-    urwidloop = urwid.MainLoop(splash, palette=palette, event_loop=evl)
+    urwidloop = urwid.MainLoop(
+        splash, palette=palette, event_loop=evl, input_filter=debounce_esc
+    )
 
     asyncioloop.call_soon(startui, urwidloop)
     try:
