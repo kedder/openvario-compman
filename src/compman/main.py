@@ -90,7 +90,7 @@ def main() -> None:
     asyncioloop.set_debug(True)
     evl = urwid.AsyncioEventLoop(loop=asyncioloop)
 
-    btxt = urwid.BigText("Openvario", urwid.font.Thin6x6Font())
+    btxt = urwid.BigText("Compman", urwid.font.Thin6x6Font())
     splash = urwid.Filler(urwid.Padding(btxt, "center", "clip"), "middle")
     urwidloop = urwid.MainLoop(
         splash, palette=palette, event_loop=evl, input_filter=debounce_esc
