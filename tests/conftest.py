@@ -1,5 +1,6 @@
 import pytest
 
+from compman import storage
 from .fixtures.soaringspot import SoaringSpotFixture
 
 
@@ -11,3 +12,10 @@ def soaringspot():
         yield ssf
     finally:
         ssf.tearDown()
+
+
+@pytest.fixture
+def storage_dir(tmpdir):
+    storage.init(tmpdir)
+    yield tmpdir
+    storage.deinit()

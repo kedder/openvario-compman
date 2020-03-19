@@ -1,16 +1,8 @@
 import os
 import io
 
-import pytest
 
 from compman import storage
-
-
-@pytest.fixture
-def storage_dir(tmpdir):
-    storage.init(tmpdir)
-    yield tmpdir
-    storage.deinit()
 
 
 def test_get_settings_new(storage_dir) -> None:

@@ -48,6 +48,9 @@ class Activity:
         log.debug(f"Activity {act.__class__} completed with {resp}")
         return resp
 
+    async def gather(self):
+        await asyncio.gather(*self._tasks)
+
     def async_task(self, coro):
         task = asyncio.create_task(coro)
         log.debug(f"Started {task}")
