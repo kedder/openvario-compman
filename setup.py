@@ -31,7 +31,7 @@ setup(
     install_requires=["urwid", "aiohttp", "lxml"],
     extras_require={
         "dev": ["black", "mypy"],
-        "test": ["pytest", "pytest-coverage", "pytest-asyncio"],
+        "test": ["pytest", "pytest-coverage", "pytest-asyncio", "pytest-mock"],
     },
     package_data={},
     data_files=[],

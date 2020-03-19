@@ -9,6 +9,7 @@ pytest-coverage = "*"
 pytest-asyncio = "*"
 black = "==19.10b0"
 mypy = "*"
+pytest-mock = "*"
 
 [packages]
 urwid = "*"
