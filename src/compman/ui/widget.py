@@ -52,15 +52,16 @@ class CMScreenHeader(urwid.WidgetWrap):
 class CMFlashMessage(urwid.WidgetWrap):
     _flashtask: Optional[asyncio.Task]
 
-    def __init__(self) -> None:
+    def __init__(self, activity) -> None:
         self.text = urwid.Text("")
+        self._activity = activity
         self._flashtask = None
         super().__init__(self.text)
 
     def flash(self, markup: str) -> None:
         if self._flashtask and not self._flashtask.done():
             self._flashtask.cancel()
-        self._flashtask = asyncio.create_task(self._flash_status(markup))
+        self._flashtask = self._activity.async_task(self._flash_status(markup))
 
     async def _flash_status(self, markup: str):
         self.text.set_text(markup)

@@ -51,17 +51,20 @@ class ActivityTestbed:
 
         yield self.activity
 
+        await self.gather_tasks()
         if not self.activity.is_finished():
             self.activity.finish(None)
-        await asyncio.wait_for(asyncio.gather(*self.activity._tasks), 1)
         self.activity = None
+
+    async def gather_tasks(self):
+        await asyncio.wait_for(asyncio.gather(*self.activity._tasks), 1)
 
     def mock(self, spec, result: object = None) -> ActivityStubMonitor:
         monitor = ActivityStubMonitor(result)
         self.mocker.patch(spec, monitor.create)
         return monitor
 
-    def render(self, size=(60, 40)):
+    def render(self, size=(60, 30)):
         canvas = self.container.render(size)
         contents = [t.decode("utf-8") for t in canvas.text]
         return "\n".join(contents)
@@ -70,10 +73,11 @@ class ActivityTestbed:
         container = self._find_container_widget(self.container)
         return container.get_focus_widgets()
 
-    async def keypress(self, key: str) -> Optional[str]:
-        res = self.container.keypress((0, 0), key)
-        await asyncio.sleep(0)
-        return res
+    async def keypress(self, *keys: str) -> None:
+        for key in keys:
+            res = self.container.keypress((60, 30), key)
+            assert res is None, "Keypress is not processed"
+            await asyncio.sleep(0)
 
     def _find_container_widget(self, w: urwid.Widget) -> urwid.WidgetContainerMixin:
         if isinstance(w, urwid.WidgetContainerMixin):

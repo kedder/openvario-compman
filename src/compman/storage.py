@@ -108,7 +108,7 @@ def save_settings() -> None:
         json.dump(settings.asdict(), f, indent=2)
 
 
-def save_competition(comp: StoredCompetition) -> None:
+def save_competition(comp: StoredCompetition, set_current: bool = False) -> None:
     compdir = _get_compdir(comp.id)
 
     if not os.path.exists(compdir):
@@ -118,6 +118,10 @@ def save_competition(comp: StoredCompetition) -> None:
         compdict = comp.asdict()
         json.dump(compdict, f, indent=2)
         f.write("\n")
+
+    if set_current:
+        get_settings().current_competition_id = comp.id
+        save_settings()
 
 
 def load_competition(cid: str) -> Optional[StoredCompetition]:

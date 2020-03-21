@@ -75,7 +75,7 @@ class CompetitionDetailsScreen(Activity):
 
         filler = urwid.Filler(form, valign=urwid.TOP)
 
-        self.status = widget.CMFlashMessage()
+        self.status = widget.CMFlashMessage(self)
 
         return urwid.Frame(
             widget.CMScreenPadding(filler),
@@ -165,7 +165,7 @@ class CompetitionDetailsScreen(Activity):
                 self._on_waypoint_changed,
             )
         )
-        asyncio.gather(*tasks)
+        await asyncio.gather(*tasks)
 
     def _detect_new_files(self, downloads):
         DFT = soaringspot.DownloadableFileType

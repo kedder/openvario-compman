@@ -1,6 +1,8 @@
 from typing import List, IO
 from unittest import mock
 import io
+import asyncio
+
 
 from compman.soaringspot import SoaringSpotContest, SoaringSpotDownloadableFile
 
@@ -36,12 +38,18 @@ class SoaringSpotFixture:
         self.file_contents = b""
 
     async def fetch_competitions_mock(self) -> List[SoaringSpotContest]:
+        # Downloading...
+        await asyncio.sleep(0)
         return self.competitions
 
     async def fetch_downloads_mock(
         self, comp_url: str
     ) -> List[SoaringSpotDownloadableFile]:
+        # Downloading...
+        await asyncio.sleep(0)
         return self.files
 
     async def fetch_file_mock(self, file_url: str) -> IO[bytes]:
+        # Downloading...
+        await asyncio.sleep(0)
         return io.BytesIO(self.file_contents)
