@@ -12,7 +12,7 @@ from compman import xcsoar
 log = logging.getLogger("compman")
 
 
-parser = argparse.ArgumentParser(description="test")
+parser = argparse.ArgumentParser(description="Competition manager for Openvario")
 parser.add_argument(
     "--datadir",
     default=os.environ.get("COMPMAN_DATADIR", "~/.compman"),
@@ -115,4 +115,4 @@ def run(argv) -> None:
 
 
 def main():
-    run(sys.argv)
+    run(sys.argv[1:])
