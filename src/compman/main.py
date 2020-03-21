@@ -21,7 +21,11 @@ parser.add_argument(
 )
 
 
-def startui(urwidloop):
+def exit() -> None:
+    raise urwid.ExitMainLoop()
+
+
+def startui(urwidloop) -> None:
     # Show the splash screen as soon as possible
     urwidloop.draw_screen()
 
@@ -32,6 +36,7 @@ def startui(urwidloop):
     from compman.ui.mainmenu import MainMenuScreen
 
     screen = MainMenuScreen(container)
+    screen.on_exit(exit)
     screen.show()
 
 

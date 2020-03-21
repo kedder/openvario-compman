@@ -1,3 +1,4 @@
+from typing import Callable, Optional
 import urwid
 
 import compman
@@ -7,6 +8,8 @@ from compman.ui.activity import Activity
 
 
 class MainMenuScreen(Activity):
+    exithandler: Optional[Callable[[], None]] = None
+
     def show(self) -> None:
         super().show()
 
@@ -17,7 +20,11 @@ class MainMenuScreen(Activity):
 
     def finish(self, result) -> None:
         super().finish(result)
-        raise urwid.ExitMainLoop()
+        if self.exithandler is not None:
+            self.exithandler()
+
+    def on_exit(self, exithandler: Callable[[], None]) -> None:
+        self.exithandler = exithandler
 
     def create_view(self):
         btxt = urwid.BigText("Compman", urwid.font.Thin6x6Font())
@@ -66,12 +73,11 @@ class MainMenuScreen(Activity):
             from compman.ui.selectcomp import SelectCompetitionScreen
 
             screen = SelectCompetitionScreen(self.container)
-        elif screen_name == "details":
+        else:
+            assert screen_name == "details"
             from compman.ui.compdetails import CompetitionDetailsScreen
 
             screen = CompetitionDetailsScreen(self.container)
-        else:
-            raise RuntimeError(f"Unknown screen name: '{screen_name}")
         screen.show()
 
     def _get_version(self) -> str:

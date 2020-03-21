@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional, Type, List
 import asyncio
 from contextlib import asynccontextmanager
 
@@ -66,7 +66,20 @@ class ActivityTestbed:
         contents = [t.decode("utf-8") for t in canvas.text]
         return "\n".join(contents)
 
+    def get_focus_widgets(self) -> List[urwid.Widget]:
+        container = self._find_container_widget(self.container)
+        return container.get_focus_widgets()
+
     async def keypress(self, key: str) -> Optional[str]:
         res = self.container.keypress((0, 0), key)
         await asyncio.sleep(0)
         return res
+
+    def _find_container_widget(self, w: urwid.Widget) -> urwid.WidgetContainerMixin:
+        if isinstance(w, urwid.WidgetContainerMixin):
+            return w
+        if isinstance(w, urwid.WidgetDecoration):
+            return self._find_container_widget(w.original_widget)
+        if isinstance(w, urwid.WidgetWrap):
+            return self._find_container_widget(w._w)
+        raise RuntimeError(f"Unknown widget type: {w}")
