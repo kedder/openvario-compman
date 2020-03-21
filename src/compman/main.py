@@ -1,4 +1,5 @@
 import os
+import sys
 import asyncio
 import logging
 import argparse
@@ -57,15 +58,17 @@ def debounce_esc(keys, raw):
             else:
                 escpressed = True
         else:
-            escpressed = False
+            if escpressed:
+                filtered.append("esc")
+                escpressed = False
             filtered.append(k)
     if escpressed:
         filtered.append("esc")
     return filtered
 
 
-def main() -> None:
-    args = parser.parse_args()
+def run(argv) -> None:
+    args = parser.parse_args(argv)
     datadir = os.path.expanduser(args.datadir)
 
     storage.init(datadir)
@@ -109,3 +112,7 @@ def main() -> None:
         log.info("Exiting normally")
     except KeyboardInterrupt:
         log.info("Killed")
+
+
+def main():
+    run(sys.argv)
