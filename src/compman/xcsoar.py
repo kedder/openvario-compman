@@ -1,4 +1,8 @@
+from typing import Optional
 import os
+
+
+XCSOAR_DIR: Optional[str] = None
 
 
 class XCSoarProfile:
@@ -29,6 +33,18 @@ class XCSoarProfile:
             self.lines.append(modified_line)
 
 
+def init(xcsoar_dir: str = None) -> None:
+    global XCSOAR_DIR
+    if xcsoar_dir is None:
+        xcsoar_dir = find_xcsoar_dir()
+    XCSOAR_DIR = xcsoar_dir
+
+
+def deinit() -> None:
+    global XCSOAR_DIR
+    XCSOAR_DIR = None
+
+
 def find_xcsoar_dir() -> str:
     home = os.path.expanduser("~")
     xcsoardir = os.path.join(home, ".xcsoar")
@@ -38,7 +54,8 @@ def find_xcsoar_dir() -> str:
 
 
 def find_xcsoar_profile_filename() -> str:
-    xcsdir = find_xcsoar_dir()
+    assert XCSOAR_DIR is not None
+    xcsdir = XCSOAR_DIR
     defaultprf = os.path.join(xcsdir, "default.prf")
     if os.path.exists(defaultprf):
         return defaultprf

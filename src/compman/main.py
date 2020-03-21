@@ -6,6 +6,7 @@ import argparse
 import urwid
 
 from compman import storage
+from compman import xcsoar
 
 log = logging.getLogger("compman")
 
@@ -68,6 +69,7 @@ def main() -> None:
     datadir = os.path.expanduser(args.datadir)
 
     storage.init(datadir)
+    xcsoar.init()
     logfname = os.path.join(datadir, "compman.log")
     logging.basicConfig(filename=logfname, level=logging.INFO)
     log.info(f"Starting compman with data dir in '{datadir}'")
