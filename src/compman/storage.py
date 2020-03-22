@@ -143,7 +143,7 @@ def list_competitions() -> List[StoredCompetition]:
             continue
         competitions.append(comp)
 
-    return competitions
+    return sorted(competitions, key=lambda c: c.title)
 
 
 def store_file(cid: str, filename: str, contents: IO[bytes]) -> StoredFile:
