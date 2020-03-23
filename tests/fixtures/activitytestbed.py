@@ -59,6 +59,9 @@ class ActivityTestbed:
     async def gather_tasks(self):
         await asyncio.wait_for(asyncio.gather(*self.activity._tasks), 1)
 
+    async def response(self):
+        return await self.activity.response
+
     def mock(self, spec, result: object = None) -> ActivityStubMonitor:
         monitor = ActivityStubMonitor(result)
         self.mocker.patch(spec, monitor.create)
