@@ -1,4 +1,5 @@
 from typing import Optional
+from shutil import copyfile
 import os
 
 
@@ -8,6 +9,7 @@ XCSOAR_DIR: Optional[str] = None
 class XCSoarProfile:
     def __init__(self, filename):
         self.filename = filename
+        self.xcsoardir = os.path.dirname(filename)
 
         with open(filename, "rt") as f:
             self.lines = f.readlines()
@@ -17,10 +19,14 @@ class XCSoarProfile:
             f.write("".join(self.lines))
 
     def set_airspace(self, filename: str) -> None:
-        self._set_option("AirspaceFile", filename)
+        fname = "compman-airspace.txt"
+        copyfile(filename, os.path.join(self.xcsoardir, fname))
+        self._set_option("AirspaceFile", fname)
 
     def set_waypoint(self, filename: str) -> None:
-        self._set_option("WPFile", filename)
+        fname = "compman-waypoints.cup"
+        copyfile(filename, os.path.join(self.xcsoardir, fname))
+        self._set_option("WPFile", fname)
 
     def _set_option(self, key: str, value: str) -> None:
         modified_line = f'{key}="{value}"\n'
