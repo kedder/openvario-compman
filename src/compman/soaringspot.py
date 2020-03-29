@@ -70,9 +70,9 @@ async def fetch_downloads(comp_url: str) -> List[SoaringSpotDownloadableFile]:
     for anode in root.xpath("//ul[@class='contest-downloads']/li/a"):
         filename = " ".join(anode.itertext()).strip()
         url = anode.attrib["href"]
-        dl = SoaringSpotDownloadableFile(
-            filename=filename, href=f"{SOARINGSPOT_URL}{url}"
-        )
+        if not url.startswith("http"):
+            url = f"{SOARINGSPOT_URL}{url}"
+        dl = SoaringSpotDownloadableFile(filename=filename, href=url)
         if filename.endswith(".txt"):
             dl.kind = DownloadableFileType.AIRSPACE
         elif filename.endswith(".cup"):
