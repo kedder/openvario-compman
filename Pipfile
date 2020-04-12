@@ -18,5 +18,3 @@ lxml = "*"
 aiohttp = "*"
 aiodns = "*"
 
-[requires]
-python_version = "3.7"
