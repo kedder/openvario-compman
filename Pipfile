@@ -10,6 +10,7 @@ pytest-asyncio = "*"
 black = "==19.10b0"
 mypy = "*"
 pytest-mock = "*"
+importlib-metadata = "*"
 
 [packages]
 urwid = "*"
@@ -17,4 +18,3 @@ openvario-compman = {editable = true,path = "."}
 lxml = "*"
 aiohttp = "*"
 aiodns = "*"
-
