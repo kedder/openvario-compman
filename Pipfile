@@ -18,3 +18,4 @@ openvario-compman = {editable = true,path = "."}
 lxml = "*"
 aiohttp = "*"
 aiodns = "*"
+openvario-shell = "*"

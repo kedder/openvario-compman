@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e9b45192bb5cd9a7a54e29a9adf85e026584014863d8a0fc80818c42d12bc2d2"
+            "sha256": "40208ab6647f5d8f9088791a276119a01967b37be670ecc790abf8697c0abfac"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -159,6 +159,13 @@
         "openvario-compman": {
             "editable": true,
             "path": "."
+        },
+        "openvario-shell": {
+            "hashes": [
+                "sha256:5889440a2d5b50177bd5fb1ffa4c66d42650e81209fe5089e0069c9357b6c0d6"
+            ],
+            "index": "pypi",
+            "version": "==0.2"
         },
         "pycares": {
             "hashes": [
