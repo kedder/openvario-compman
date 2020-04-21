@@ -35,6 +35,9 @@ setup(
     },
     package_data={},
     data_files=[],
-    entry_points={"console_scripts": ["compman=compman.main:main"]},
+    entry_points={
+        "console_scripts": ["compman=compman.main:main"],
+        "ovshell.extensions": ["compman=compman.ovshell:extension"],
+    },
     project_urls={},
 )

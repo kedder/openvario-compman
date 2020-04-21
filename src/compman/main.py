@@ -15,7 +15,7 @@ log = logging.getLogger("compman")
 parser = argparse.ArgumentParser(description="Competition manager for Openvario")
 parser.add_argument(
     "--datadir",
-    default=os.environ.get("COMPMAN_DATADIR", "~/.compman"),
+    default=os.environ.get("COMPMAN_DATADIR", storage.DEFAULT_DATADIR),
     help=(
         "Path to directory where compman stores data. By default "
         "~/.compman. Also can be set with COMPMAN_DATADIR environment variable"
@@ -67,15 +67,19 @@ def debounce_esc(keys, raw):
     return filtered
 
 
+def setup_logging(datadir: str) -> None:
+    logfname = os.path.join(datadir, "compman.log")
+    logging.basicConfig(filename=logfname, level=logging.INFO)
+    log.info(f"Starting compman with data dir in '{datadir}'")
+
+
 def run(argv) -> None:
     args = parser.parse_args(argv)
     datadir = os.path.expanduser(args.datadir)
 
     storage.init(datadir)
     xcsoar.init()
-    logfname = os.path.join(datadir, "compman.log")
-    logging.basicConfig(filename=logfname, level=logging.INFO)
-    log.info(f"Starting compman with data dir in '{datadir}'")
+    setup_logging(datadir)
 
     palette = [
         ("text", "white", "black", ""),

@@ -4,6 +4,8 @@ import os
 import json
 from dataclasses import dataclass
 
+DEFAULT_DATADIR = "~/.compman"
+
 _DATADIR: Optional[str]
 _SETTINGS: Optional["Settings"] = None
 
