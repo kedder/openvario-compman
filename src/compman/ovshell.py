@@ -41,7 +41,7 @@ class CompmanShellApp(protocol.App):
         main.setup_logging(datadir)
 
         act = CompmanShellActivity(self.shell)
-        self.shell.screen.push_activity(act)
+        self.shell.screen.push_activity(act, palette=main.PALETTE)
 
 
 class CompmanShellActivity(protocol.Activity):

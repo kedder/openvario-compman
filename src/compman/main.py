@@ -23,6 +23,26 @@ parser.add_argument(
 )
 
 
+PALETTE = [
+    ("text", "white", "black", ""),
+    ("btn focus", "white", "dark red", ""),
+    ("btn normal", "white", "dark blue", ""),
+    ("li normal", "light cyan", "black", ""),
+    ("li focus", "white", "dark red", ""),
+    ("pg normal", "white", "black", "standout"),
+    ("pg complete", "white", "dark magenta"),
+    ("pg smooth", "dark magenta", "black"),
+    ("screen header", "yellow", "black", ""),
+    ("bg", "light gray", "black", ""),
+    ("success message", "light green", "black", ""),
+    ("success banner", "white", "dark green", ""),
+    ("error message", "light red", "black", ""),
+    ("error banner", "white", "dark red", ""),
+    ("progress", "light magenta", "black", ""),
+    ("remark", "dark gray", "black", ""),
+]
+
+
 def exit() -> None:
     raise urwid.ExitMainLoop()
 
@@ -81,25 +101,6 @@ def run(argv) -> None:
     xcsoar.init()
     setup_logging(datadir)
 
-    palette = [
-        ("text", "white", "black", ""),
-        ("btn focus", "white", "dark red", ""),
-        ("btn normal", "white", "dark blue", ""),
-        ("li normal", "light cyan", "black", ""),
-        ("li focus", "white", "dark red", ""),
-        ("pg normal", "white", "black", "standout"),
-        ("pg complete", "white", "dark magenta"),
-        ("pg smooth", "dark magenta", "black"),
-        ("screen header", "yellow", "black", ""),
-        ("bg", "light gray", "black", ""),
-        ("success message", "light green", "black", ""),
-        ("success banner", "white", "dark green", ""),
-        ("error message", "light red", "black", ""),
-        ("error banner", "white", "dark red", ""),
-        ("progress", "light magenta", "black", ""),
-        ("remark", "dark gray", "black", ""),
-    ]
-
     asyncioloop = asyncio.get_event_loop()
     asyncioloop.set_debug(True)
     evl = urwid.AsyncioEventLoop(loop=asyncioloop)
@@ -107,7 +108,7 @@ def run(argv) -> None:
     btxt = urwid.BigText("Compman", urwid.font.Thin6x6Font())
     splash = urwid.Filler(urwid.Padding(btxt, "center", "clip"), "middle")
     urwidloop = urwid.MainLoop(
-        splash, palette=palette, event_loop=evl, input_filter=debounce_esc
+        splash, palette=PALETTE, event_loop=evl, input_filter=debounce_esc
     )
 
     asyncioloop.call_soon(startui, urwidloop)
