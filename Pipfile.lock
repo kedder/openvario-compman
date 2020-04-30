@@ -162,10 +162,10 @@
         },
         "openvario-shell": {
             "hashes": [
-                "sha256:5889440a2d5b50177bd5fb1ffa4c66d42650e81209fe5089e0069c9357b6c0d6"
+                "sha256:7fda7117034fca57d8cadf45c6ebc6b089ca2d821ad708c42e7b59ce4130a6b1"
             ],
             "index": "pypi",
-            "version": "==0.2"
+            "version": "==0.3"
         },
         "pycares": {
             "hashes": [
@@ -263,10 +263,10 @@
         },
         "click": {
             "hashes": [
-                "sha256:8a18b4ea89d8820c5d0c7da8a64b2c324b4dabb695804dbfea19b9be9d88c0cc",
-                "sha256:e345d143d80bf5ee7534056164e5e112ea5e22716bbb1ce727941f4c8b471b9a"
+                "sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a",
+                "sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc"
             ],
-            "version": "==7.1.1"
+            "version": "==7.1.2"
         },
         "coverage": {
             "hashes": [
