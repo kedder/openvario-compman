@@ -44,6 +44,7 @@ def test_ovshell_activity(
     # WHEN
     compman_app.launch()
     act = ovshell.screen.stub_top_activity()
+    assert act is not None
     widget = act.create()
 
     # THEN
@@ -59,6 +60,7 @@ async def test_ovshell_exit_app(
     # WHEN
     compman_app.launch()
     act = ovshell.screen.stub_top_activity()
+    assert act is not None
     widget = act.create()
 
     widget.keypress((60, 30), "esc")
