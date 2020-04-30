@@ -4,7 +4,9 @@ Changlog for Opevario Compman
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Correctly reference waypoint and airspace files in xcsoar profile
+
+- Integrate with [openvario-shell](https://github.com/kedder/openvario-shell)
 
 
 
