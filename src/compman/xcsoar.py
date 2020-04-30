@@ -21,12 +21,12 @@ class XCSoarProfile:
     def set_airspace(self, filename: str) -> None:
         fname = "compman-airspace.txt"
         copyfile(filename, os.path.join(self.xcsoardir, fname))
-        self._set_option("AirspaceFile", fname)
+        self._set_option("AirspaceFile", f"%LOCAL_PATH%\\{fname}")
 
     def set_waypoint(self, filename: str) -> None:
         fname = "compman-waypoints.cup"
         copyfile(filename, os.path.join(self.xcsoardir, fname))
-        self._set_option("WPFile", fname)
+        self._set_option("WPFile", f"%LOCAL_PATH%\\{fname}")
 
     def _set_option(self, key: str, value: str) -> None:
         modified_line = f'{key}="{value}"\n'
