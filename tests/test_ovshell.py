@@ -13,10 +13,11 @@ def ovshell(tmp_path: str) -> OpenVarioShellStub:
 
 @pytest.fixture
 def compman_app(
-    ovshell: OpenVarioShellStub, tmp_path: str, monkeypatch
+    ovshell: OpenVarioShellStub, tmp_path: str, monkeypatch, xcsoar_dir: str
 ) -> CompmanShellApp:
     app = CompmanShellApp(ovshell)
-    monkeypatch.setenv("COMPMAN_DATADIR", tmp_path)
+    monkeypatch.setenv("COMPMAN_XCSOARDIR", str(xcsoar_dir))
+    monkeypatch.setenv("COMPMAN_DATADIR", str(tmp_path))
     return app
 
 

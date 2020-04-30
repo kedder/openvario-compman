@@ -21,6 +21,14 @@ parser.add_argument(
         "~/.compman. Also can be set with COMPMAN_DATADIR environment variable"
     ),
 )
+parser.add_argument(
+    "--xcsoardir",
+    default=os.environ.get("COMPMAN_XCSOARDIR", None),
+    help=(
+        "Path to xcsoar home directory. By default ~/.xcsoar. Also can be set "
+        "with COMPMAN_XCSOARDIR environment variable"
+    ),
+)
 
 
 PALETTE = [
@@ -98,7 +106,7 @@ def run(argv) -> None:
     datadir = os.path.expanduser(args.datadir)
 
     storage.init(datadir)
-    xcsoar.init()
+    xcsoar.init(args.xcsoardir)
     setup_logging(datadir)
 
     asyncioloop = asyncio.get_event_loop()
