@@ -9,7 +9,9 @@ from compman.ui.compdetails import CompetitionDetailsScreen
 
 
 @pytest.mark.asyncio
-async def test_compdetails_view(storage_dir, soaringspot, activity_testbed) -> None:
+async def test_compdetails_view(
+    storage_dir, soaringspot, xcsoar_dir, activity_testbed
+) -> None:
     # GIVEN
     _setup_test_comp()
     async with activity_testbed.shown(CompetitionDetailsScreen):
@@ -21,7 +23,9 @@ async def test_compdetails_view(storage_dir, soaringspot, activity_testbed) -> N
 
 
 @pytest.mark.asyncio
-async def test_compdetails_download(storage_dir, soaringspot, activity_testbed) -> None:
+async def test_compdetails_download(
+    storage_dir, soaringspot, xcsoar_dir, activity_testbed
+) -> None:
     # GIVEN
     comp = _setup_test_comp()
     soaringspot.files = [
@@ -75,12 +79,13 @@ async def test_compdetails_activate(
 
         assert "New contest files detected!" in activity_testbed.render()
 
+        await activity_testbed.keypress("enter", "down")
         focused = activity_testbed.get_focus_widgets()[-1]
         assert focused.get_label() == "Activate"
         await activity_testbed.keypress("enter")
 
         # THEN
-        assert "XCSoar profile updated" in activity_testbed.render()
+        assert "XCSoar profiles updated" in activity_testbed.render()
 
 
 @pytest.mark.asyncio
@@ -110,16 +115,17 @@ async def test_compdetails_select_files(
 
         assert "New contest files detected!" in activity_testbed.render()
 
-        # Now select airspace and waypoint files
-        await activity_testbed.keypress("up", "enter", "up", "enter")
+        # Now select profile, airspace and waypoint files
+        await activity_testbed.keypress("enter", "up", "enter", "up", "enter")
 
         # THEN
         content = activity_testbed.render()
         assert "(X) airspace.txt" in content
         assert "(X) waypoints.cup" in content
         assert "Airspace changed to: airspace.txt" in content
+        assert "[X] openvario.prf" in content
 
-    with open(xcsoar.find_xcsoar_profile_filename(), "r") as f:
+    with open(xcsoar.get_xcsoar_profile_filename("openvario.prf"), "r") as f:
         profile_contents = f.read()
 
     assert "waypoints.cup" in profile_contents

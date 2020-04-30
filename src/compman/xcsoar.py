@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from shutil import copyfile
 import os
 
@@ -59,20 +59,22 @@ def find_xcsoar_dir() -> str:
     return xcsoardir
 
 
-def find_xcsoar_profile_filename() -> str:
+def list_xcsoar_profiles() -> List[str]:
     assert XCSOAR_DIR is not None
-    xcsdir = XCSOAR_DIR
-    defaultprf = os.path.join(xcsdir, "default.prf")
-    if os.path.exists(defaultprf):
-        return defaultprf
 
-    for f in os.listdir(xcsdir):
-        if f.endswith(".prf"):
-            return os.path.join(xcsdir, f)
+    profiles = []
+    for fname in os.listdir(XCSOAR_DIR):
+        if fname.endswith(".prf"):
+            profiles.append(fname)
 
-    raise FileNotFoundError(defaultprf)
+    return profiles
 
 
-def get_xcsoar_profile() -> XCSoarProfile:
-    prfname = find_xcsoar_profile_filename()
-    return XCSoarProfile(prfname)
+def get_xcsoar_profile_filename(profile_fname: str) -> str:
+    assert XCSOAR_DIR is not None
+    return os.path.join(XCSOAR_DIR, profile_fname)
+
+
+def get_xcsoar_profile(profile_fname: str) -> XCSoarProfile:
+    profile_fullname = get_xcsoar_profile_filename(profile_fname)
+    return XCSoarProfile(profile_fullname)

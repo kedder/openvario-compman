@@ -23,6 +23,7 @@ class CompetitionDetailsScreen(Activity):
         self.competition = storage.load_competition(cid)
         self.airspaces = storage.get_airspace_files(cid)
         self.waypoints = storage.get_waypoint_files(cid)
+        self.profiles = xcsoar.list_xcsoar_profiles()
 
         super().show()
         self._flashtask = None
@@ -57,6 +58,10 @@ class CompetitionDetailsScreen(Activity):
             ]
         )
 
+        self.profile_pile = urwid.Pile(
+            [self._make_profile_checkbox(prf) for prf in self.profiles]
+        )
+
         self.download_status = urwid.Text("")
 
         form = urwid.Pile(
@@ -68,6 +73,9 @@ class CompetitionDetailsScreen(Activity):
                 urwid.Divider(),
                 urwid.Text("Waypoint files"),
                 p2(self.waypoint_pile),
+                urwid.Divider(),
+                urwid.Text("XCSoar profiles"),
+                p2(self.profile_pile),
                 urwid.Divider(),
                 self._create_buttons(),
             ]
@@ -107,17 +115,30 @@ class CompetitionDetailsScreen(Activity):
         self._udpate_xcsoar_config(self.competition)
         self.status.flash(f"Waypoint changed to: {selected}")
 
-    def _on_activate(self, btn):
-        xcsprofile = xcsoar.find_xcsoar_profile_filename()
+    def _on_profile_changed(self, ev, selected, profile: str) -> None:
+        if selected:
+            self.competition.add_profile(profile)
+        else:
+            self.competition.remove_profile(profile)
+        storage.save_competition(self.competition)
+
+    def _on_activate(self, btn) -> None:
+        if not self.competition.profiles:
+            self.status.flash(
+                ("error message", "Please select at least one XCSoar profile")
+            )
+            return
+
+        profiles = ", ".join(self.competition.profiles)
         self._udpate_xcsoar_config(self.competition)
-        self.status.flash(f"XCSoar profile updated: {xcsprofile}")
+        self.status.flash(("success message", f"XCSoar profiles updated: {profiles}"))
 
     def _on_exit(self, btn):
         self.finish(None)
 
     def _udpate_xcsoar_config(self, comp: storage.StoredCompetition) -> None:
-        try:
-            xcprofile = xcsoar.get_xcsoar_profile()
+        for prf in self.competition.profiles:
+            xcprofile = xcsoar.get_xcsoar_profile(prf)
             if comp.airspace:
                 xcprofile.set_airspace(
                     storage.get_full_file_path(comp.id, comp.airspace)
@@ -127,9 +148,6 @@ class CompetitionDetailsScreen(Activity):
                     storage.get_full_file_path(comp.id, comp.waypoints)
                 )
             xcprofile.save()
-        except FileNotFoundError as e:
-            log.error(f"XCSoar profile not found: {e}")
-            self.status.flash(f"XCSoar profile not found: file not found: {e}")
 
     async def _update_competition_files(self):
         compurl = self.competition.soaringspot_url
@@ -214,3 +232,8 @@ class CompetitionDetailsScreen(Activity):
         markup = cast(UrwidMarkup, [label, " "])
         markup.extend(extra or [])
         return markup
+
+    def _make_profile_checkbox(self, profile: str) -> urwid.CheckBox:
+        cb = urwid.CheckBox(profile, profile in self.competition.profiles)
+        urwid.connect_signal(cb, "change", self._on_profile_changed, profile)
+        return urwid.AttrMap(cb, "li normal", "li focus")

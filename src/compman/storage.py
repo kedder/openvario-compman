@@ -2,7 +2,7 @@ from typing import Optional, Dict, Any, List, IO
 import logging
 import os
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 DEFAULT_DATADIR = "~/.compman"
 
@@ -31,6 +31,7 @@ class StoredCompetition:
     soaringspot_url: Optional[str] = None
     airspace: Optional[str] = None
     waypoints: Optional[str] = None
+    profiles: List[str] = field(default_factory=list)
 
     @classmethod
     def fromdict(cls, id: str, data: Dict[str, Any]) -> "StoredCompetition":
@@ -40,6 +41,7 @@ class StoredCompetition:
             soaringspot_url=data.get("soaringspot_url"),
             airspace=data.get("airspace"),
             waypoints=data.get("waypoints"),
+            profiles=data.get("profiles") or [],
         )
 
     def asdict(self) -> Dict[str, Any]:
@@ -48,8 +50,17 @@ class StoredCompetition:
             "soaringspot_url": self.soaringspot_url,
             "airspace": self.airspace,
             "waypoints": self.waypoints,
+            "profiles": self.profiles,
             "version": 1,
         }
+
+    def add_profile(self, profile) -> None:
+        if profile not in self.profiles:
+            self.profiles.append(profile)
+
+    def remove_profile(self, profile: str) -> None:
+        if profile in self.profiles:
+            self.profiles.remove(profile)
 
 
 @dataclass
