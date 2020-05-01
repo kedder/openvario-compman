@@ -51,10 +51,16 @@ the network connection is up, use `opkg` package manager to download and
 install `compman`:
 
 ```
-$ echo src compman http://openvario.lebedev.lt/opkg/armv7vet2hf-neon/ >> /etc/opkg/customfeeds.conf
+$ echo src compman http://openvario.lebedev.lt/opkg/armv7vet2hf-neon >> /etc/opkg/customfeeds.conf
 $ opkg update
 $ opkg install openvario-compman
 $ opkg install ovmenu-compman
+```
+
+If you have already installed [openvario-shell](https://github.com/kedder/openvario-shell), all you have to do is:
+
+```
+$ opkg install openvario-compman
 ```
 
 At this point you should be able to run compman from command line:
