@@ -1,7 +1,7 @@
 Changlog for Opevario Compman
 =============================
 
-0.4 (unreleased)
+0.4 (2020-05-01)
 ----------------
 
 - Allow to select xcsoar profiles where to install selected competition files
