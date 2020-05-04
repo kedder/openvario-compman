@@ -4,15 +4,15 @@ Changlog for Opevario Compman
 0.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Properly expand user directory to find data directory.
 
 
 0.4 (2020-05-01)
 ----------------
 
-- Allow to select xcsoar profiles where to install selected competition files
-- Correctly reference waypoint and airspace files in xcsoar profile
-- Integrate with [openvario-shell](https://github.com/kedder/openvario-shell)
+- Allow to select xcsoar profiles where to install selected competition files.
+- Correctly reference waypoint and airspace files in xcsoar profile.
+- Integrate with [openvario-shell](https://github.com/kedder/openvario-shell).
 
 
 0.3 (2020-04-03)

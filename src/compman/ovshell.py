@@ -36,6 +36,7 @@ class CompmanShellApp(protocol.App):
 
     def launch(self) -> None:
         datadir = os.environ.get("COMPMAN_DATADIR", storage.DEFAULT_DATADIR)
+        datadir = os.path.expanduser(datadir)
         storage.init(datadir)
         xcsoardir = os.environ.get("COMPMAN_XCSOARDIR", None)
         xcsoar.init(xcsoardir)
