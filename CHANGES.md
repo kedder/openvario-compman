@@ -1,6 +1,12 @@
 Changlog for Opevario Compman
 =============================
 
+0.5 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 0.4.1 (2020-05-04)
 ------------------
 
