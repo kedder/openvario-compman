@@ -1,8 +1,8 @@
 Changlog for Opevario Compman
 =============================
 
-0.5 (unreleased)
-----------------
+0.4.1 (2020-05-04)
+------------------
 
 - Properly expand user directory to find data directory.
 
