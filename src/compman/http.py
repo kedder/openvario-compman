@@ -10,4 +10,3 @@ async def fetch_file(file_url: str) -> IO[bytes]:
             content = await response.read()
 
     return io.BytesIO(content)
-
