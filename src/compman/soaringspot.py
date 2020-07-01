@@ -1,10 +1,10 @@
-from typing import List, IO
+from typing import List
 import re
 import io
 from enum import Enum
 from dataclasses import dataclass
-from aiohttp import ClientSession
 
+from aiohttp import ClientSession
 from lxml import etree
 
 
@@ -82,14 +82,6 @@ async def fetch_downloads(comp_url: str) -> List[SoaringSpotDownloadableFile]:
             dls.append(dl)
 
     return dls
-
-
-async def fetch_file(file_url: str) -> IO[bytes]:
-    async with ClientSession() as session:
-        async with session.get(file_url) as response:
-            content = await response.read()
-
-    return io.BytesIO(content)
 
 
 def _extract_text(els) -> str:

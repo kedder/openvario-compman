@@ -1,6 +1,6 @@
 import pytest
 
-from compman import soaringspot
+from compman import soaringspot, http
 
 
 @pytest.mark.asyncio
@@ -43,7 +43,7 @@ async def test_fetch_file() -> None:
     dl0 = downloads[0]
 
     # WHEN
-    fetched = await soaringspot.fetch_file(dl0.href)
+    fetched = await http.fetch_file(dl0.href)
     content = fetched.read()
 
     # THEN

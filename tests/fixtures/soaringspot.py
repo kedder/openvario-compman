@@ -22,7 +22,7 @@ class SoaringSpotFixture:
             mock.patch(
                 "compman.soaringspot.fetch_downloads", self.fetch_downloads_mock
             ),
-            mock.patch("compman.soaringspot.fetch_file", self.fetch_file_mock),
+            mock.patch("compman.http.fetch_file", self.fetch_file_mock),
         ]
 
         for p in self._patches:

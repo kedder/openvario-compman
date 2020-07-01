@@ -6,6 +6,7 @@ import urwid
 
 from compman import storage
 from compman import soaringspot
+from compman import http
 from compman import xcsoar
 from compman.ui import widget
 from compman.ui.activity import Activity
@@ -210,10 +211,10 @@ class CompetitionDetailsScreen(Activity):
 
     async def _download_file(
         self, sf: storage.StoredFile, url: str, radio: urwid.RadioButton
-    ):
+    ) -> None:
         orig_radio = radio.original_widget
         orig_radio.set_label(self._make_label(sf, [("progress", "Downloading...")]))
-        dlcontents = await soaringspot.fetch_file(url)
+        dlcontents = await http.fetch_file(url)
         stored = storage.store_file(self.competition.id, sf.name, dlcontents)
         orig_radio.set_label(self._make_label(stored, [("success banner", " New! ")]))
 
