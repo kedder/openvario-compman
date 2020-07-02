@@ -36,6 +36,19 @@ async def test_fetch_downloads() -> None:
 
 
 @pytest.mark.asyncio
+async def test_fetch_classes() -> None:
+    # GIVEN
+    ssurl = "https://www.soaringspot.com/en_gb/wgc2018pl/"
+
+    # WHEN
+    classes = await soaringspot.fetch_classes(ssurl)
+
+    # THEN
+    assert len(classes) == 3
+    assert classes == ["Standard", "Meter 15", "Club"]
+
+
+@pytest.mark.asyncio
 async def test_fetch_file() -> None:
     # GIVEN
     ssurl = "https://www.soaringspot.com/en_gb/wgc2018pl/"

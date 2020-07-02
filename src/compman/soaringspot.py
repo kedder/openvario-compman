@@ -57,6 +57,22 @@ async def fetch_competitions() -> List[SoaringSpotContest]:
     return contests
 
 
+async def fetch_classes(comp_url: str) -> List[str]:
+    results_url = f"{_sanitize_url(comp_url)}/results"
+    async with ClientSession() as session:
+        async with session.get(results_url) as response:
+            html = await response.text()
+
+    parser = etree.HTMLParser()
+    root = etree.parse(io.StringIO(html), parser)
+
+    classes = []
+    headers = root.xpath("//table[@class='result-overview']/thead/tr/th")
+    for hdrel in headers:
+        classes.append(_extract_text([hdrel]))
+    return classes
+
+
 async def fetch_downloads(comp_url: str) -> List[SoaringSpotDownloadableFile]:
     dl_url = f"{_sanitize_url(comp_url)}/downloads"
     async with ClientSession() as session:
