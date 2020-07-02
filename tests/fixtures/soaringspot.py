@@ -8,6 +8,7 @@ from compman.soaringspot import SoaringSpotContest, SoaringSpotDownloadableFile
 
 
 class SoaringSpotFixture:
+    classes: List[str]
     competitons: List[SoaringSpotContest]
     files: List[SoaringSpotDownloadableFile]
     file_contents: bytes
@@ -19,6 +20,7 @@ class SoaringSpotFixture:
             mock.patch(
                 "compman.soaringspot.fetch_competitions", self.fetch_competitions_mock
             ),
+            mock.patch("compman.soaringspot.fetch_classes", self.fetch_classes_mock),
             mock.patch(
                 "compman.soaringspot.fetch_downloads", self.fetch_downloads_mock
             ),
@@ -33,6 +35,7 @@ class SoaringSpotFixture:
             p.stop()
 
     def reset(self):
+        self.classes = []
         self.competitions = []
         self.files = []
         self.file_contents = b""
@@ -41,6 +44,11 @@ class SoaringSpotFixture:
         # Downloading...
         await asyncio.sleep(0)
         return self.competitions
+
+    async def fetch_classes_mock(self, comp_url: str) -> List[str]:
+        # Downloading...
+        await asyncio.sleep(0)
+        return self.classes
 
     async def fetch_downloads_mock(
         self, comp_url: str

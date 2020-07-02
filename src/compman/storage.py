@@ -32,6 +32,8 @@ class StoredCompetition:
     airspace: Optional[str] = None
     waypoints: Optional[str] = None
     profiles: List[str] = field(default_factory=list)
+    classes: List[str] = field(default_factory=list)
+    selected_class: Optional[str] = None
 
     @classmethod
     def fromdict(cls, id: str, data: Dict[str, Any]) -> "StoredCompetition":
@@ -42,6 +44,8 @@ class StoredCompetition:
             airspace=data.get("airspace"),
             waypoints=data.get("waypoints"),
             profiles=data.get("profiles") or [],
+            classes=data.get("classes") or [],
+            selected_class=data.get("selected_class"),
         )
 
     def asdict(self) -> Dict[str, Any]:
@@ -51,6 +55,8 @@ class StoredCompetition:
             "airspace": self.airspace,
             "waypoints": self.waypoints,
             "profiles": self.profiles,
+            "classes": self.classes,
+            "selected_class": self.selected_class,
             "version": 1,
         }
 

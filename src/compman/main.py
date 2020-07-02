@@ -47,6 +47,7 @@ PALETTE = [
     ("error message", "light red", "black", ""),
     ("error banner", "white", "dark red", ""),
     ("progress", "light magenta", "black", ""),
+    ("highlight", "yellow", "black", ""),
     ("remark", "dark gray", "black", ""),
 ]
 

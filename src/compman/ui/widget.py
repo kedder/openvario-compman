@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List, Union, Tuple
 import asyncio
 import logging
 
@@ -6,6 +6,8 @@ import urwid
 
 
 log = logging.getLogger("compman")
+
+UrwidMarkup = Union[str, Tuple[str, str], List[Union[str, Tuple[str, str]]]]
 
 
 class CMButton(urwid.Button):
@@ -58,12 +60,12 @@ class CMFlashMessage(urwid.WidgetWrap):
         self._flashtask = None
         super().__init__(self.text)
 
-    def flash(self, markup: str) -> None:
+    def flash(self, markup: UrwidMarkup) -> None:
         if self._flashtask and not self._flashtask.done():
             self._flashtask.cancel()
         self._flashtask = self._activity.async_task(self._flash_status(markup))
 
-    async def _flash_status(self, markup: str):
+    async def _flash_status(self, markup: UrwidMarkup):
         self.text.set_text(markup)
         await asyncio.sleep(3.0)
         self.text.set_text("")
