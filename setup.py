@@ -9,7 +9,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="openvario-compman",
-    version="0.5.0",
+    version="0.5.1.dev0",
     description="Competition Manager for OpenVario",
     long_description=long_description,
     long_description_content_type="text/markdown",
