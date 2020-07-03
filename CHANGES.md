@@ -1,8 +1,8 @@
 Changlog for Opevario Compman
 =============================
 
-0.5 (unreleased)
-----------------
+0.5.0 (2020-07-04)
+------------------
 
 - Ability to select / switch competition class for selected competition
 - Ability to automatically download and install today's task from soarscore.com
