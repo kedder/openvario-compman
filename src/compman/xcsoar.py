@@ -70,6 +70,15 @@ def list_xcsoar_profiles() -> List[str]:
     return profiles
 
 
+def install_default_task(task: bytes) -> str:
+    assert XCSOAR_DIR is not None
+    taskfname = os.path.join(XCSOAR_DIR, "Default.tsk")
+    with open(taskfname, "wb") as f:
+        f.write(task)
+
+    return taskfname
+
+
 def get_xcsoar_profile_filename(profile_fname: str) -> str:
     assert XCSOAR_DIR is not None
     return os.path.join(XCSOAR_DIR, profile_fname)

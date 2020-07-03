@@ -10,7 +10,7 @@ from compman.ui.compdetails import CompetitionDetailsScreen
 
 @pytest.mark.asyncio
 async def test_compdetails_view(
-    storage_dir, soaringspot, xcsoar_dir, activity_testbed
+    storage_dir, soaringspot, soarscore, xcsoar_dir, activity_testbed
 ) -> None:
     # GIVEN
     _setup_test_comp()
@@ -24,7 +24,7 @@ async def test_compdetails_view(
 
 @pytest.mark.asyncio
 async def test_compdetails_download(
-    storage_dir, soaringspot, xcsoar_dir, activity_testbed
+    storage_dir, soaringspot, soarscore, xcsoar_dir, activity_testbed
 ) -> None:
     # GIVEN
     comp = _setup_test_comp()
@@ -55,7 +55,7 @@ async def test_compdetails_download(
 
 @pytest.mark.asyncio
 async def test_compdetails_activate(
-    storage_dir, soaringspot, activity_testbed, xcsoar_dir, async_sleep
+    storage_dir, soaringspot, soarscore, activity_testbed, xcsoar_dir, async_sleep
 ) -> None:
     # GIVEN
     comp = _setup_test_comp()
@@ -90,7 +90,7 @@ async def test_compdetails_activate(
 
 @pytest.mark.asyncio
 async def test_compdetails_select_files(
-    storage_dir, soaringspot, activity_testbed, xcsoar_dir, async_sleep
+    storage_dir, soaringspot, soarscore, activity_testbed, xcsoar_dir, async_sleep
 ) -> None:
     # GIVEN
     comp = _setup_test_comp()

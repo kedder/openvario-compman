@@ -1,4 +1,4 @@
-from typing import List, cast
+from typing import List, Optional, cast
 import logging
 import asyncio
 
@@ -6,6 +6,7 @@ import urwid
 
 from compman import storage
 from compman import soaringspot
+from compman import soarscore
 from compman import http
 from compman import xcsoar
 from compman.ui import widget
@@ -32,6 +33,10 @@ class CompetitionDetailsScreen(Activity):
         p2 = lambda w: urwid.Padding(w, left=2)
 
         self.class_widget = CompetitionClassSelectorWidget(self, self.competition)
+        urwid.connect_signal(self.class_widget, "change", self._on_class_changed)
+
+        self.task_widget = TaskDownloadWidget(self, self.competition)
+        urwid.connect_signal(self.task_widget, "download", self._on_download_task)
 
         self.airspace_group: List[urwid.Widget] = []
         self.airspace_pile = urwid.Pile(
@@ -69,6 +74,8 @@ class CompetitionDetailsScreen(Activity):
             [
                 self.class_widget,
                 urwid.Divider(),
+                self.task_widget,
+                urwid.Divider(),
                 self.download_status,
                 urwid.Divider(),
                 urwid.Text("Airspace files"),
@@ -100,7 +107,7 @@ class CompetitionDetailsScreen(Activity):
 
         exit_btn = widget.CMButton("Main Menu")
         urwid.connect_signal(exit_btn, "click", self._on_exit)
-        return urwid.GridFlow([activate_btn, exit_btn], 22, 2, 1, "left")
+        return button_row([activate_btn, exit_btn])
 
     def _on_airspace_changed(self, ev, new_state, selected):
         if not new_state:
@@ -124,6 +131,20 @@ class CompetitionDetailsScreen(Activity):
         else:
             self.competition.remove_profile(profile)
         storage.save_competition(self.competition)
+
+    def _on_download_task(self, ev, task):
+        self.async_task(self._download_task(task))
+
+    def _on_class_changed(self, ev, new_class):
+        self.task_widget.refresh()
+
+    async def _download_task(self, taskinfo: soarscore.SoarScoreTaskInfo) -> None:
+        self.status.set(("progress", f"Downloading {taskinfo.title}..."))
+        task = await soarscore.fetch_url(taskinfo.task_url)
+        taskfname = xcsoar.install_default_task(task)
+        self.status.flash(
+            ("success message", f"Task downloaded and installed: {taskfname}")
+        )
 
     def _on_activate(self, btn) -> None:
         if not self.competition.profiles:
@@ -243,6 +264,8 @@ class CompetitionDetailsScreen(Activity):
 
 
 class CompetitionClassSelectorWidget(urwid.WidgetWrap):
+    signals = ["change"]
+
     def __init__(self, activity: Activity, comp: storage.StoredCompetition) -> None:
         self._activity = activity
         self._comp = comp
@@ -272,21 +295,23 @@ class CompetitionClassSelectorWidget(urwid.WidgetWrap):
             cancel_btn = urwid.Text("")
 
         return urwid.Pile(
-            [
-                self.status,
-                self.class_pile,
-                urwid.Divider(),
-                urwid.GridFlow([cancel_btn], 22, 2, 1, "left"),
-            ]
+            [self.status, self.class_pile, urwid.Divider(), button_row([cancel_btn]),]
         )
 
     def _create_class_display(self) -> urwid.Widget:
-        current = urwid.Text(
-            ["Selected competition class: ", ("highlight", self._comp.selected_class)]
-        )
         button = widget.CMButton(" Change Class ")
         urwid.connect_signal(button, "click", self._on_change_class)
-        return urwid.Columns([("pack", current), ("pack", button)], dividechars=1)
+
+        class_title = urwid.Text(("highlight", self._comp.selected_class))
+
+        return urwid.Pile(
+            [
+                urwid.Text("Competition class"),
+                urwid.Padding(class_title, left=2),
+                urwid.Divider(),
+                button_row([button]),
+            ]
+        )
 
     async def _update_classes(self) -> None:
         if self._comp.soaringspot_url is None:
@@ -328,6 +353,92 @@ class CompetitionClassSelectorWidget(urwid.WidgetWrap):
         if new_state:
             self._comp.selected_class = new_class
             storage.save_competition(self._comp)
+            self._emit("change", new_class)
 
             wdg = self._create_class_display()
             self.container.original_widget = wdg
+
+
+class TaskDownloadWidget(urwid.WidgetWrap):
+    signals = ["download"]
+
+    def __init__(self, activity: Activity, comp: storage.StoredCompetition) -> None:
+        self._activity = activity
+        self._comp = comp
+        self._tasks: List[soarscore.SoarScoreTaskInfo] = []
+
+        self._activity.async_task(self._fetch_tasks())
+        super().__init__(urwid.Pile([]))
+
+    def refresh(self) -> None:
+        self._activity.async_task(self._fetch_tasks())
+
+    async def _fetch_tasks(self) -> None:
+        if self._comp.soaringspot_url is None:
+            return
+
+        self._w = urwid.Text(("progress", "Fetching today's task..."))
+
+        self._tasks = await soarscore.fetch_latest_tasks(self._comp.id)
+        self._create_task_view()
+
+    def _get_task(self) -> Optional[soarscore.SoarScoreTaskInfo]:
+        for ti in self._tasks:
+            if ti.comp_class == self._comp.selected_class:
+                return ti
+        return None
+
+    def _create_task_view(self) -> None:
+        if self._comp.selected_class is None:
+            self._w = urwid.Text(
+                ("remark", "Select competition class to download task")
+            )
+            return
+
+        refresh_btn = widget.CMButton(" Refresh ")
+        urwid.connect_signal(refresh_btn, "click", self._on_refresh)
+
+        curtask = self._get_task()
+        if curtask is None:
+            self._w = urwid.Columns(
+                [
+                    ("pack", urwid.Text(("remark", "No task for today"))),
+                    ("pack", refresh_btn),
+                ],
+                dividechars=1,
+            )
+            return
+
+        task_title = urwid.Text(
+            [
+                ("highlight", curtask.title),
+                " day ",
+                ("highlight", str(curtask.day_no)),
+                " task ",
+                ("highlight", str(curtask.task_no)),
+            ]
+        )
+        task_timestamp = urwid.Text(["Generated on ", curtask.timestamp])
+
+        self.download_btn = widget.CMButton("Download")
+        urwid.connect_signal(self.download_btn, "click", self._on_download, curtask)
+
+        self._w = urwid.Pile(
+            [
+                urwid.Text("Today's task"),
+                urwid.Padding(task_title, left=2),
+                urwid.Padding(task_timestamp, left=2),
+                urwid.Divider(),
+                button_row([self.download_btn, refresh_btn]),
+            ]
+        )
+
+    def _on_refresh(self, btn):
+        self._activity.async_task(self._fetch_tasks())
+
+    def _on_download(self, btn, taskinfo: soarscore.SoarScoreTaskInfo):
+        self._emit("download", taskinfo)
+
+
+def button_row(buttons):
+    return urwid.GridFlow(buttons, 22, 2, 1, "left")

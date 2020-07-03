@@ -13,10 +13,13 @@ UrwidMarkup = Union[str, Tuple[str, str], List[Union[str, Tuple[str, str]]]]
 class CMButton(urwid.Button):
     def __init__(self, text):
         super().__init__(text)
-        txt = urwid.SelectableIcon(text)
-        txt.align = "center"
-        btn = urwid.AttrWrap(txt, "btn normal", "btn focus")
+        self.txt = urwid.SelectableIcon(text)
+        self.txt.align = "center"
+        btn = urwid.AttrWrap(self.txt, "btn normal", "btn focus")
         self._w = btn
+
+    def set_text(self, text: str):
+        self.txt.set_text(text)
 
 
 class CMSelectableListItem(urwid.Button):
@@ -59,6 +62,9 @@ class CMFlashMessage(urwid.WidgetWrap):
         self._activity = activity
         self._flashtask = None
         super().__init__(self.text)
+
+    def set(self, markup: UrwidMarkup):
+        self.text.set_text(markup)
 
     def flash(self, markup: UrwidMarkup) -> None:
         if self._flashtask and not self._flashtask.done():

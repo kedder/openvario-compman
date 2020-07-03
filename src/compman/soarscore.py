@@ -1,13 +1,14 @@
 from typing import List, Optional
 import io
 from dataclasses import dataclass
+import asyncio
 import re
 
-from aiohttp import ClientSession
+import requests
 from lxml import etree
 
 
-SOARSCORE_URL = "https://soarscore.com/"
+SOARSCORE_URL = "https://soarscore.com"
 
 SOARSCORE_TASK_DESC_RE = r"(.*) Day([0-9]+) Task([0-9]+) (.*) \.tsk generated: (.*)"
 
@@ -22,14 +23,25 @@ class SoarScoreTaskInfo:
     task_url: str
 
 
+def _fetch_url(url) -> bytes:
+    resp = requests.get(url)
+    return resp.content
+
+
+async def fetch_url(url) -> bytes:
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, _fetch_url, url)
+
+
 async def fetch_latest_tasks(comp_id: str) -> List[SoarScoreTaskInfo]:
+    # Soarscore serves on HTTP/2 and aiohttp cannot handle that. Run synchronous
+    # requests
+    # instead.
     comp_url = f"{SOARSCORE_URL}/competitions/{comp_id}/"
-    async with ClientSession() as session:
-        async with session.get(comp_url) as response:
-            html = await response.text()
+    html = await fetch_url(comp_url)
 
     parser = etree.HTMLParser()
-    root = etree.parse(io.StringIO(html), parser)
+    root = etree.parse(io.BytesIO(html), parser)
 
     task_links = root.xpath('//*[@id="Downloads"]//a[@download]')
     tasks = []

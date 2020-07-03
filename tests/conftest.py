@@ -7,6 +7,7 @@ import pytest
 from compman import storage
 from compman import xcsoar
 from .fixtures.soaringspot import SoaringSpotFixture
+from .fixtures.soarscore import SoarScoreFixture
 from .fixtures.activitytestbed import ActivityTestbed
 
 HERE = os.path.dirname(__file__)
@@ -15,6 +16,16 @@ HERE = os.path.dirname(__file__)
 @pytest.fixture()
 def soaringspot():
     ssf = SoaringSpotFixture()
+    ssf.setUp()
+    try:
+        yield ssf
+    finally:
+        ssf.tearDown()
+
+
+@pytest.fixture()
+def soarscore():
+    ssf = SoarScoreFixture()
     ssf.setUp()
     try:
         yield ssf

@@ -13,11 +13,13 @@ SOARSCORE_DIR = os.path.join(HERE, "fixtures", "soarscore")
 @pytest.mark.asyncio
 async def test_soarscore_two_classes(monkeypatch) -> None:
     # GIVEN
-    with open(os.path.join(SOARSCORE_DIR, "two-classes.html")) as f:
+    with open(os.path.join(SOARSCORE_DIR, "two-classes.html"), "rb") as f:
         html = f.read()
-    get_mock = mock.MagicMock(name="get")
-    get_mock.return_value.__aenter__.return_value.text.return_value = html
-    monkeypatch.setattr("compman.soarscore.ClientSession.get", get_mock)
+    get_mock = mock.Mock(name="get")
+    resp = mock.Mock()
+    resp.content = html
+    get_mock.return_value = resp
+    monkeypatch.setattr("compman.soarscore.requests.get", get_mock)
 
     # WHEN
     tasks = await soarscore.fetch_latest_tasks("test")
