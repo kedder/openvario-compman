@@ -81,8 +81,8 @@ class CompetitionClassSelectorWidget(urwid.WidgetWrap):
 
         self._comp.classes = classes
         storage.save_competition(self._comp)
+        self._populate_class_radios()
         if classes:
-            self._populate_class_radios()
             self.status.set_text("Pick your competition class:")
         else:
             self.status.set_text(

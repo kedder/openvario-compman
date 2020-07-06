@@ -1,4 +1,4 @@
-from typing import List, IO
+from typing import List, IO, Optional
 from unittest import mock
 import io
 import asyncio
@@ -12,6 +12,10 @@ class SoaringSpotFixture:
     competitons: List[SoaringSpotContest]
     files: List[SoaringSpotDownloadableFile]
     file_contents: bytes
+
+    fetch_clases_exc: Optional[Exception] = None
+    fetch_competitions_exc: Optional[Exception] = None
+    fetch_downloads_exc: Optional[Exception] = None
 
     def setUp(self) -> None:
         self.reset()
@@ -43,11 +47,15 @@ class SoaringSpotFixture:
     async def fetch_competitions_mock(self) -> List[SoaringSpotContest]:
         # Downloading...
         await asyncio.sleep(0)
+        if self.fetch_competitions_exc is not None:
+            raise self.fetch_competitions_exc
         return self.competitions
 
     async def fetch_classes_mock(self, comp_url: str) -> List[str]:
         # Downloading...
         await asyncio.sleep(0)
+        if self.fetch_clases_exc is not None:
+            raise self.fetch_clases_exc
         return self.classes
 
     async def fetch_downloads_mock(
@@ -55,6 +63,8 @@ class SoaringSpotFixture:
     ) -> List[SoaringSpotDownloadableFile]:
         # Downloading...
         await asyncio.sleep(0)
+        if self.fetch_downloads_exc is not None:
+            raise self.fetch_downloads_exc
         return self.files
 
     async def fetch_file_mock(self, file_url: str) -> IO[bytes]:

@@ -16,12 +16,12 @@ class Activity:
     def __init__(self, container):
         self.container = container
         self.response = asyncio.Future()
+        self._tasks = set()
 
     def create_view(self) -> urwid.Widget:
         raise NotImplementedError()
 
     def show(self) -> None:
-        self._tasks = set()
         self._previous_widget = self.container.original_widget
         self.container.original_widget = widget.CMGlobalCommands(
             self.create_view(), self

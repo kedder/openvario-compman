@@ -9,6 +9,7 @@ from compman import xcsoar
 from .fixtures.soaringspot import SoaringSpotFixture
 from .fixtures.soarscore import SoarScoreFixture
 from .fixtures.activitytestbed import ActivityTestbed
+from .fixtures.widgettestbed import WidgetTestbedFactory
 
 HERE = os.path.dirname(__file__)
 
@@ -38,6 +39,11 @@ def storage_dir(tmpdir):
     storage.init(tmpdir)
     yield tmpdir
     storage.deinit()
+
+
+@pytest.fixture
+def widget_testbed():
+    yield WidgetTestbedFactory()
 
 
 @pytest.fixture
