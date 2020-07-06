@@ -87,3 +87,8 @@ class CMGlobalCommands(urwid.WidgetWrap):
             self.activity.finish(None)
             return
         return self._w.keypress(size, key)
+
+
+class ButtonRow(urwid.GridFlow):
+    def __init__(self, buttons: List[urwid.Widget]) -> None:
+        super().__init__(buttons, 22, 2, 1, "left")
