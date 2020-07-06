@@ -9,7 +9,7 @@ class WidgetTestbed:
         self.wdg = wdg
 
     def render(self, size=(60, 30)) -> str:
-        if "box" in self.wdg.sizing():
+        if "flow" in self.wdg.sizing():
             size = size[:1]
         canvas = self.wdg.render(size)
         contents = [t.decode("utf-8") for t in canvas.text]
@@ -21,7 +21,7 @@ class WidgetTestbed:
 
     async def keypress(self, *keys: str) -> None:
         size: Tuple[int, ...] = (60, 30)
-        if "box" in self.wdg.sizing():
+        if "flow" in self.wdg.sizing():
             size = size[:1]
 
         for key in keys:

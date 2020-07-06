@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import asyncio
 
 import mock
@@ -8,6 +8,7 @@ from compman.soarscore import SoarScoreTaskInfo
 
 class SoarScoreFixture:
     tasks: List[SoarScoreTaskInfo]
+    fetch_latest_tasks_exc: Optional[Exception] = None
 
     def setUp(self) -> None:
         self.reset()
@@ -29,4 +30,6 @@ class SoarScoreFixture:
     async def fetch_latest_tasks(self, comp_id: str) -> List[SoarScoreTaskInfo]:
         # Downloading...
         await asyncio.sleep(0)
+        if self.fetch_latest_tasks_exc is not None:
+            raise self.fetch_latest_tasks_exc
         return self.tasks
