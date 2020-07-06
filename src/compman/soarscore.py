@@ -23,6 +23,10 @@ class SoarScoreTaskInfo:
     task_url: str
 
 
+class SoarScoreClientError(Exception):
+    pass
+
+
 def _fetch_url(url) -> bytes:
     resp = requests.get(url)
     return resp.content
@@ -30,7 +34,10 @@ def _fetch_url(url) -> bytes:
 
 async def fetch_url(url) -> bytes:
     loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, _fetch_url, url)
+    try:
+        return await loop.run_in_executor(None, _fetch_url, url)
+    except requests.RequestException as e:
+        raise SoarScoreClientError(str(e)) from e
 
 
 async def fetch_latest_tasks(comp_id: str) -> List[SoarScoreTaskInfo]:

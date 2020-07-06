@@ -4,7 +4,8 @@ Changlog for Opevario Compman
 0.5.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Handle network errors gracefully. Show the error message in case download
+  failed.
 
 
 0.5.0 (2020-07-04)

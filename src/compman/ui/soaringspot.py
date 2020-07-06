@@ -1,4 +1,5 @@
 from typing import List
+import logging
 
 import urwid
 
@@ -6,6 +7,8 @@ from compman import soaringspot
 from compman import storage
 from compman.ui.activity import Activity
 from compman.ui import widget
+
+log = logging.getLogger("compman")
 
 
 class SoaringSpotPicker(urwid.ListBox):
@@ -28,18 +31,22 @@ class SoaringSpotPicker(urwid.ListBox):
         for comp in competitions:
             btn = widget.CMSelectableListItem(comp.title)
             urwid.connect_signal(btn, "click", self._on_competition_selected, comp)
-
-            # txt = urwid.Padding(
-            #     urwid.AttrMap(urwid.Text(comp.description), "text"), left=2
-            # )
             self._items.extend([btn])
         urwid.connect_signal(self._items, "modified", self._on_focus_changed)
         self._emit("focus", competitions[0])
 
     async def _download_competitions(self):
         del self._items[:]
-        self._items.append(urwid.Text(("progress", "Downloading...")))
-        comps = await soaringspot.fetch_competitions()
+        statusitem = urwid.Text(("progress", "Downloading..."))
+        self._items.append(statusitem)
+        try:
+            comps = await soaringspot.fetch_competitions()
+        except soaringspot.SoaringSpotClientError as e:
+            statusitem.set_text(
+                ("error message", f"Error downloading competition list: {e}")
+            )
+            log.exception("Error downloading competition list")
+            return
         self.set_competitions(comps)
 
     def _on_competition_selected(

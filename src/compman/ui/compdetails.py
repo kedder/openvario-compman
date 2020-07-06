@@ -179,7 +179,15 @@ class CompetitionDetailsScreen(Activity):
             return
 
         self.download_status.set_text(("progress", "Refreshing file list..."))
-        downloads = await soaringspot.fetch_downloads(compurl)
+        try:
+            downloads = await soaringspot.fetch_downloads(compurl)
+        except soaringspot.SoaringSpotClientError as e:
+            self.download_status.set_text(
+                ("error message", f"Error refreshing file list: {e}")
+            )
+            log.exception("Error refreshing soaringspot downloads")
+            return
+
         new_airspaces, new_waypoints = self._detect_new_files(downloads)
 
         if not new_airspaces and not new_waypoints:
@@ -317,7 +325,15 @@ class CompetitionClassSelectorWidget(urwid.WidgetWrap):
         if self._comp.soaringspot_url is None:
             return
         self.status.set_text(("progress", "Fetching competition classes..."))
-        classes = await soaringspot.fetch_classes(self._comp.soaringspot_url)
+        try:
+            classes = await soaringspot.fetch_classes(self._comp.soaringspot_url)
+        except soaringspot.SoaringSpotClientError as e:
+            self.status.set_text(
+                ("error message", f"Error fetching competition classes: {e}")
+            )
+            log.exception("Error fetching competition classes")
+            return
+
         self._comp.classes = classes
         storage.save_competition(self._comp)
         if classes:
@@ -379,7 +395,12 @@ class TaskDownloadWidget(urwid.WidgetWrap):
 
         self._w = urwid.Text(("progress", "Fetching today's task..."))
 
-        self._tasks = await soarscore.fetch_latest_tasks(self._comp.id)
+        try:
+            self._tasks = await soarscore.fetch_latest_tasks(self._comp.id)
+        except soarscore.SoarScoreClientError as e:
+            self._w = urwid.Text(("error message", f"Error fetching today's task: {e}"))
+            return
+
         self._create_task_view()
 
     def _get_task(self) -> Optional[soarscore.SoarScoreTaskInfo]:

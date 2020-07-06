@@ -4,7 +4,7 @@ import io
 from enum import Enum
 from dataclasses import dataclass
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientError
 from lxml import etree
 
 
@@ -32,10 +32,17 @@ class SoaringSpotContest:
     description: str
 
 
+class SoaringSpotClientError(Exception):
+    pass
+
+
 async def fetch_competitions() -> List[SoaringSpotContest]:
-    async with ClientSession() as session:
-        async with session.get(SOARINGSPOT_URL) as response:
-            html = await response.text()
+    try:
+        async with ClientSession() as session:
+            async with session.get(SOARINGSPOT_URL) as response:
+                html = await response.text()
+    except ClientError as e:
+        raise SoaringSpotClientError(str(e)) from e
 
     # Parse html
     parser = etree.HTMLParser()
@@ -59,9 +66,12 @@ async def fetch_competitions() -> List[SoaringSpotContest]:
 
 async def fetch_classes(comp_url: str) -> List[str]:
     results_url = f"{_sanitize_url(comp_url)}/results"
-    async with ClientSession() as session:
-        async with session.get(results_url) as response:
-            html = await response.text()
+    try:
+        async with ClientSession() as session:
+            async with session.get(results_url) as response:
+                html = await response.text()
+    except ClientError as e:
+        raise SoaringSpotClientError(str(e)) from e
 
     parser = etree.HTMLParser()
     root = etree.parse(io.StringIO(html), parser)
@@ -75,9 +85,12 @@ async def fetch_classes(comp_url: str) -> List[str]:
 
 async def fetch_downloads(comp_url: str) -> List[SoaringSpotDownloadableFile]:
     dl_url = f"{_sanitize_url(comp_url)}/downloads"
-    async with ClientSession() as session:
-        async with session.get(dl_url) as response:
-            html = await response.text()
+    try:
+        async with ClientSession() as session:
+            async with session.get(dl_url) as response:
+                html = await response.text()
+    except ClientError as e:
+        raise SoaringSpotClientError(str(e)) from e
 
     parser = etree.HTMLParser()
     root = etree.parse(io.StringIO(html), parser)
