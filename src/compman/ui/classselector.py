@@ -52,17 +52,18 @@ class CompetitionClassSelectorWidget(urwid.WidgetWrap):
         )
 
     def _create_class_display(self) -> urwid.Widget:
-        button = widget.CMButton(" Change Class ")
+        button = widget.CMButton(" Change ")
         urwid.connect_signal(button, "click", self._on_change_class)
 
         class_title = urwid.Text(("highlight", self._comp.selected_class))
 
         return urwid.Pile(
             [
-                urwid.Text("Competition class"),
+                urwid.Columns(
+                    [("pack", urwid.Text("Competition class")), ("pack", button)],
+                    dividechars=1,
+                ),
                 urwid.Padding(class_title, left=2),
-                urwid.Divider(),
-                widget.ButtonRow([button]),
             ]
         )
 

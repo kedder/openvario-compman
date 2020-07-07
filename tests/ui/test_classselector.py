@@ -65,7 +65,7 @@ async def test_classselector_initial_selection(
     assert "Competition class" in rendered
     assert "Standard" in rendered
     assert "Club" not in rendered
-    assert "Change Class" in rendered
+    assert "Change" in rendered
 
     # Competition class is selected
     assert comp.classes == ["Club", "Standard", "15 Meter"]
@@ -94,9 +94,9 @@ async def test_classselector_change_class(
     assert "Competition class" in rendered
     assert "Club" in rendered
 
-    # Press "Change Class"
+    # Press "Change"
     focused = wtb.get_focus_widgets()[-1]
-    assert "Change Class" in focused.label
+    assert "Change" in focused.label
     await wtb.keypress("enter")
 
     # We start to fetch classes, but allow to select from known ones
@@ -136,9 +136,9 @@ async def test_classselector_cancel_selection(
     assert "Competition class" in rendered
     assert "Club" in rendered
 
-    # Press "Change Class"
+    # Press "Change"
     focused = wtb.get_focus_widgets()[-1]
-    assert "Change Class" in focused.label
+    assert "Change" in focused.label
     await wtb.keypress("enter")
 
     # There are no classes for this competition anymore
