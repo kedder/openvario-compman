@@ -10,9 +10,11 @@ This application is intended for glider pilots participating in gliding
 competitions, published on [Soaring Spot](https://soaringspot.com). It runs on
 [OpenVario](https://openvario.org/) flight computer and automatically downloads
 current contest airspace and waypoint files when they are published on Soaring
-Spot. `compman` also configures [XCSoar](https://xcsoar.org/) to use the
-updated files. You can switch between contests easily without need to download
-and transfer files to the flight computer manually.
+Spot. `compman` allows to select your competition class and automatically
+downloads today's task, provided by [soarscore.com](https://soarscore.com). It
+will configure [XCSoar](https://xcsoar.org/) to use the task and updated files.
+You can switch between contests easily without need to download and transfer
+files to the flight computer manually.
 
 It is a text-mode application, which might look primitive for modern
 graphics-rich UI standards. However, it is written using contemporary software
@@ -20,7 +22,11 @@ engineering techniques, responsive, very fast and easy to use, even with very
 limited input controls available for OpenVario. It also has a fairly simple
 code, that makes `openvario` easy to understand and change.
 
-[![asciicast](https://asciinema.org/a/307125.svg)](https://asciinema.org/a/307125)
+
+![Main Screen](screenshots/screen1.png?raw=true "Main screen")
+![Soaringspot competitions](screenshots/screen2.png?raw=true "Soaringspot competitions")
+![Competition selector](screenshots/screen3.png?raw=true "Competition selector")
+![Competition details](screenshots/screen4.png?raw=true "Competition details")
 
 ## Usage
 
