@@ -2,7 +2,7 @@ from typing import Sequence
 import os
 
 import urwid
-from ovshell import protocol
+from ovshell import api
 
 from compman import storage
 from compman import xcsoar
@@ -10,28 +10,28 @@ from compman import main
 from compman.ui.mainmenu import MainMenuScreen
 
 
-def extension(id: str, shell: protocol.OpenVarioShell) -> protocol.Extension:
+def extension(id: str, shell: api.OpenVarioShell) -> api.Extension:
     return CompmanExtension(id, shell)
 
 
-class CompmanExtension(protocol.Extension):
+class CompmanExtension(api.Extension):
     title = "Compman"
 
-    def __init__(self, id: str, shell: protocol.OpenVarioShell) -> None:
+    def __init__(self, id: str, shell: api.OpenVarioShell) -> None:
         self.id = id
         self.shell = shell
 
-    def list_apps(self) -> Sequence[protocol.App]:
+    def list_apps(self) -> Sequence[api.App]:
         return [CompmanShellApp(self.shell)]
 
 
-class CompmanShellApp(protocol.App):
+class CompmanShellApp(api.App):
     name = "compman"
     title = "Compman"
     description = "Competition manager"
     priority = 70
 
-    def __init__(self, shell: protocol.OpenVarioShell) -> None:
+    def __init__(self, shell: api.OpenVarioShell) -> None:
         self.shell = shell
 
     def launch(self) -> None:
@@ -46,8 +46,8 @@ class CompmanShellApp(protocol.App):
         self.shell.screen.push_activity(act, palette=main.PALETTE)
 
 
-class CompmanShellActivity(protocol.Activity):
-    def __init__(self, shell: protocol.OpenVarioShell) -> None:
+class CompmanShellActivity(api.Activity):
+    def __init__(self, shell: api.OpenVarioShell) -> None:
         self.shell = shell
 
     def create(self) -> urwid.Widget:
