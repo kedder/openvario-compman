@@ -1,7 +1,7 @@
 Changlog for Opevario Compman
 =============================
 
-0.6.0 (unreleased)
+0.5.2 (2020-08-23)
 ------------------
 
 - Support the newest openvrio-shell.
