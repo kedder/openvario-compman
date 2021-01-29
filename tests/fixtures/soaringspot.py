@@ -20,7 +20,7 @@ class SoaringSpotFixture:
     def setUp(self) -> None:
         self.reset()
 
-        self._patches = [
+        self._patches: List[mock._patch] = [
             mock.patch(
                 "compman.soaringspot.fetch_competitions", self.fetch_competitions_mock
             ),

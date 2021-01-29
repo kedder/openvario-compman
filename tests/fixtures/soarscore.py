@@ -1,7 +1,7 @@
 from typing import List, Optional
 import asyncio
 
-import mock
+from unittest import mock
 
 from compman.soarscore import SoarScoreTaskInfo
 
@@ -14,7 +14,7 @@ class SoarScoreFixture:
     def setUp(self) -> None:
         self.reset()
 
-        self._patches = [
+        self._patches: List[mock._patch] = [
             mock.patch("compman.soarscore.fetch_latest_tasks", self.fetch_latest_tasks),
             mock.patch("compman.soarscore.fetch_url", self.fetch_url),
         ]
