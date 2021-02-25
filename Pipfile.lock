@@ -452,11 +452,11 @@
         },
         "importlib-metadata": {
             "hashes": [
-                "sha256:080d666daa2faedcc2e96c0c87d3cdb76325261c51650016784834733faa7897",
-                "sha256:144acbe6ec34f170c4a362f52c2d03e82db7d012668ba57ff8f1e668905889b0"
+                "sha256:24499ffde1b80be08284100393955842be4a59c7c16bbf2738aad0e464a8e0aa",
+                "sha256:c6af5dbf1126cd959c4a8d8efd61d4d3c83bddb0459a17e554284a077574b614"
             ],
             "index": "pypi",
-            "version": "==3.6.0"
+            "version": "==3.7.0"
         },
         "iniconfig": {
             "hashes": [
