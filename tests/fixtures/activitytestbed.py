@@ -11,7 +11,11 @@ class ActivityStub(Activity):
     _result: Optional[object] = None
 
     def __init__(
-        self, container, monitor: "ActivityStubMonitor", result: Optional[object]
+        self,
+        container,
+        monitor: "ActivityStubMonitor",
+        result: Optional[object],
+        response: asyncio.Future,
     ) -> None:
         super().__init__(container)
         self._monitor = monitor
@@ -29,13 +33,20 @@ class ActivityStub(Activity):
 
 
 class ActivityStubMonitor:
-    def __init__(self, result: object = None) -> None:
+    def __init__(self, spec: str, result: object = None) -> None:
+        self.spec = spec
         self.result = result
         self.created = False
         self.shown = False
+        self._response: "asyncio.Future[object]" = asyncio.Future()
+        self._activity = None
 
     def create(self, container):
-        return ActivityStub(container, self, self.result)
+        self._activity = ActivityStub(container, self, self.result, self._response)
+        return self._activity
+
+    def finish(self, result):
+        self._activity.finish(result)
 
 
 class ActivityTestbed:
@@ -51,10 +62,18 @@ class ActivityTestbed:
 
         yield self.activity
 
-        await self.gather_tasks()
+        self._cancel_tasks()
+
         if not self.activity.is_finished():
             self.activity.finish(None)
         self.activity = None
+
+    def _cancel_tasks(self) -> None:
+        if self.activity is None:
+            return
+
+        for t in self.activity._tasks:
+            t.cancel()
 
     async def gather_tasks(self):
         await asyncio.wait_for(asyncio.gather(*self.activity._tasks), 1)
@@ -63,7 +82,7 @@ class ActivityTestbed:
         return await self.activity.response
 
     def mock(self, spec, result: object = None) -> ActivityStubMonitor:
-        monitor = ActivityStubMonitor(result)
+        monitor = ActivityStubMonitor(spec, result)
         self.mocker.patch(spec, monitor.create)
         return monitor
 

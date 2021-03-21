@@ -38,7 +38,8 @@ def test_launch_app(ovshell: OpenVarioShellStub, compman_app: CompmanShellApp) -
     assert isinstance(act, CompmanShellActivity)
 
 
-def test_ovshell_activity(
+@pytest.mark.asyncio
+async def test_ovshell_activity(
     ovshell: OpenVarioShellStub, compman_app: CompmanShellApp
 ) -> None:
     # WHEN
@@ -46,11 +47,14 @@ def test_ovshell_activity(
     act = ovshell.screen.stub_top_activity()
     assert act is not None
     widget = act.create()
+    await asyncio.sleep(0)  # allow welcome screen to run
 
     # THEN
     canvas = widget.render((60, 30))
     contents = "\n".join([t.decode("utf-8") for t in canvas.text])
     assert "Welcome to Competition Manager" in contents
+
+    widget.keypress((60, 30), "esc")
 
 
 @pytest.mark.asyncio
@@ -62,6 +66,8 @@ async def test_ovshell_exit_app(
     act = ovshell.screen.stub_top_activity()
     assert act is not None
     widget = act.create()
+
+    await asyncio.sleep(0)  # allow welcome screen to run
 
     widget.keypress((60, 30), "esc")
     await asyncio.sleep(0)

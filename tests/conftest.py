@@ -37,8 +37,25 @@ def soarscore():
 @pytest.fixture
 def storage_dir(tmpdir):
     storage.init(tmpdir)
-    yield tmpdir
-    storage.deinit()
+    try:
+        yield tmpdir
+    finally:
+        storage.deinit()
+
+
+@pytest.fixture
+def sample_competition(storage_dir):
+    comp = storage.StoredCompetition("test", "Test competition")
+    storage.save_competition(comp)
+    settings = storage.get_settings()
+    settings.current_competition_id = comp.id
+    storage.save_settings()
+    try:
+        yield comp
+    finally:
+        settings.current_competition_id = None
+        storage.save_settings()
+        storage.delete_competition(comp.id)
 
 
 @pytest.fixture

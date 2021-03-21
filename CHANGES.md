@@ -4,7 +4,7 @@ Changlog for Opevario Compman
 0.6.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Allow to remove a competition, that is no longer in use.
 
 
 0.5.2 (2020-08-23)

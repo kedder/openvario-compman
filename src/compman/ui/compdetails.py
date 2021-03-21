@@ -14,9 +14,15 @@ log = logging.getLogger("compman")
 
 
 class CompetitionDetailsScreen(Activity):
-    def show(self):
+    competition: storage.StoredCompetition
+
+    def show(self) -> None:
         cid = storage.get_settings().current_competition_id
-        self.competition = storage.load_competition(cid)
+        assert cid is not None
+        comp = storage.load_competition(cid)
+        assert comp is not None
+
+        self.competition = comp
         self.airspaces = storage.get_airspace_files(cid)
         self.waypoints = storage.get_waypoint_files(cid)
         self.profiles = xcsoar.list_xcsoar_profiles()
@@ -103,9 +109,10 @@ class CompetitionDetailsScreen(Activity):
         activate_btn = widget.CMButton("Activate")
         urwid.connect_signal(activate_btn, "click", self._on_activate)
 
-        exit_btn = widget.CMButton("Main Menu")
-        urwid.connect_signal(exit_btn, "click", self._on_exit)
-        return widget.ButtonRow([activate_btn, exit_btn])
+        remove_btn = widget.CMButton("Remove")
+        # urwid.connect_signal(remove_btn, "click", self._on_remove)
+        self.connect_async(remove_btn, "click", self._on_remove)
+        return widget.ButtonRow([activate_btn, remove_btn])
 
     def _create_credits(self) -> urwid.Widget:
         credits = (
@@ -162,8 +169,15 @@ class CompetitionDetailsScreen(Activity):
         self._udpate_xcsoar_config(self.competition)
         self.status.flash(("success message", f"XCSoar profiles updated: {profiles}"))
 
-    def _on_exit(self, btn):
-        self.finish(None)
+    async def _on_remove(self) -> None:
+        screen = CompetitionRemoveConfirmationScreen(self.container, self.competition)
+        screen.show()
+        confirmed = await screen.response
+        if confirmed:
+            storage.delete_competition(self.competition.id)
+            storage.get_settings().current_competition_id = None
+            storage.save_settings()
+            self.finish(None)
 
     def _udpate_xcsoar_config(self, comp: storage.StoredCompetition) -> None:
         for prf in self.competition.profiles:
@@ -274,3 +288,37 @@ class CompetitionDetailsScreen(Activity):
         cb = urwid.CheckBox(profile, profile in self.competition.profiles)
         urwid.connect_signal(cb, "change", self._on_profile_changed, profile)
         return urwid.AttrMap(cb, "li normal", "li focus")
+
+
+class CompetitionRemoveConfirmationScreen(Activity):
+    def __init__(self, container, competition: storage.StoredCompetition) -> None:
+        super().__init__(container)
+        self.competition = competition
+
+    def create_view(self) -> urwid.Widget:
+        dialog = urwid.Pile(
+            [
+                urwid.Text("Are you sure you want to remove this competion?"),
+                urwid.Divider(),
+                self._create_buttons(),
+            ]
+        )
+        filler = urwid.Filler(dialog, valign=urwid.TOP)
+        return urwid.Frame(
+            widget.CMScreenPadding(filler),
+            header=widget.CMScreenHeader(self.competition.title),
+        )
+
+    def _create_buttons(self) -> urwid.Widget:
+        cancel_btn = widget.CMButton("No, Cancel")
+        urwid.connect_signal(cancel_btn, "click", self._on_cancel)
+
+        remove_btn = widget.CMButton("Yes, Remove")
+        urwid.connect_signal(remove_btn, "click", self._on_remove)
+        return widget.ButtonRow([cancel_btn, remove_btn])
+
+    def _on_cancel(self, btn) -> None:
+        self.finish(False)
+
+    def _on_remove(self, btn) -> None:
+        self.finish(True)

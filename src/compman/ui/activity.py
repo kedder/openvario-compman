@@ -23,6 +23,9 @@ class Activity:
 
     def show(self) -> None:
         self._previous_widget = self.container.original_widget
+        self.replace()
+
+    def replace(self) -> None:
         self.container.original_widget = widget.CMGlobalCommands(
             self.create_view(), self
         )

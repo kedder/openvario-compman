@@ -52,10 +52,5 @@ class SelectCompetitionScreen(Activity):
 
         self.finish(comp)
 
-        from compman.ui.compdetails import CompetitionDetailsScreen
-
-        details = CompetitionDetailsScreen(self.container)
-        details.show()
-
     def _on_cancel(self, btn):
         self.finish(None)
