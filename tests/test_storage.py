@@ -71,6 +71,27 @@ def test_save_competition(storage_dir) -> None:
     assert [c.id for c in comps] == ["first"]
 
 
+def test_delete_competition(storage_dir) -> None:
+    comp = storage.StoredCompetition(
+        id="first",
+        title="First Competition",
+        soaringspot_url="http://localhost",
+        airspace="airspace.txt",
+        waypoints="waypoints.txt",
+    )
+
+    storage.save_competition(comp)
+    comps = storage.list_competitions()
+    assert [c.id for c in comps] == ["first"]
+
+    # WHEN
+    storage.delete_competition(comp.id)
+
+    # THEN
+    comps = storage.list_competitions()
+    assert comps == []
+
+
 def test_load_competition_missing(storage_dir) -> None:
     # WHEN
     comp = storage.load_competition("missing")

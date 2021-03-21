@@ -154,6 +154,14 @@ def load_competition(cid: str) -> Optional[StoredCompetition]:
     return comp
 
 
+def delete_competition(cid: str) -> None:
+    if not exists(cid):
+        return
+
+    fname = _get_compconfigname(cid)
+    os.unlink(fname)
+
+
 def list_competitions() -> List[StoredCompetition]:
     competitions = []
     for cid in os.listdir(_DATADIR):
