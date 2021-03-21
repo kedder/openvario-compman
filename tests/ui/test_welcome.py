@@ -38,7 +38,6 @@ async def test_welcomescreen_setup_comp(
 
         # THEN
         assert sspicker_screen.shown
-        assert details_screen.shown
         assert storage.get_settings().current_competition_id == "test"
 
 

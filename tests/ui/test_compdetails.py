@@ -186,6 +186,67 @@ async def test_compdetails_select_class_and_download_task(
         assert "Task downloaded and installed" in rendered
 
 
+@pytest.mark.asyncio
+async def test_remove_competition_confirm(
+    storage_dir, activity_testbed, xcsoar_dir, async_sleep, sample_competition
+) -> None:
+    # WHEN
+    async with activity_testbed.shown(CompetitionDetailsScreen):
+        # Let everything to be downloaded
+        await activity_testbed.gather_tasks()
+        rendered = activity_testbed.render()
+
+        # WHEN
+        # Navigate to "remove" button and press it
+        await activity_testbed.keypress("down", "right", "enter")
+
+        # THEN
+        rendered = activity_testbed.render()
+
+        assert "Test competition" in rendered
+        assert "Are you sure you want to remove this competion?" in rendered
+
+        # Confirm
+        await activity_testbed.keypress("right", "enter")
+
+    # The test competition should be gone
+    assert storage.list_competitions() == []
+    assert storage.get_settings().current_competition_id is None
+
+
+@pytest.mark.asyncio
+async def test_remove_competition_cancel(
+    storage_dir, activity_testbed, xcsoar_dir, async_sleep, sample_competition
+) -> None:
+    # WHEN
+    async with activity_testbed.shown(CompetitionDetailsScreen):
+        # Let everything to be downloaded
+        await activity_testbed.gather_tasks()
+        rendered = activity_testbed.render()
+
+        # WHEN
+        # Navigate to "remove" button and press it
+        await activity_testbed.keypress("down", "right", "enter")
+
+        # THEN
+        rendered = activity_testbed.render()
+
+        assert "Test competition" in rendered
+        assert "Are you sure you want to remove this competion?" in rendered
+
+        # Cancel
+        await activity_testbed.keypress("enter")
+
+        rendered = activity_testbed.render()
+
+        # We are back to details screen
+        assert "XCSoar profiles" in rendered
+
+    # The test competition should be gone
+    assert storage.list_competitions() == [sample_competition]
+    assert storage.get_settings().current_competition_id is sample_competition.id
+
+
 def _setup_test_comp() -> storage.StoredCompetition:
     comp = storage.StoredCompetition(
         id="test",

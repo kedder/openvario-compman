@@ -1,3 +1,5 @@
+import asyncio
+
 import pytest
 
 from compman import storage
@@ -25,7 +27,7 @@ async def test_selectcomp_view_existing(storage_dir, activity_testbed) -> None:
     storage.save_competition(storage.StoredCompetition("two", title="Two"))
 
     # WHEN
-    async with activity_testbed.shown(SelectCompetitionScreen):
+    async with activity_testbed.shown(SelectCompetitionScreen) as act:
         content = activity_testbed.render()
 
         assert "One" in content
@@ -36,7 +38,8 @@ async def test_selectcomp_view_existing(storage_dir, activity_testbed) -> None:
         await activity_testbed.keypress("enter")
 
         # THEN
-        assert details_screen.shown
+        selected = act.response.result()
+        assert selected.id == "one"
 
         settings = storage.get_settings()
         assert settings.current_competition_id == "one"
@@ -72,10 +75,12 @@ async def test_selectcomp_new_comp_select(storage_dir, activity_testbed) -> None
         "compman.ui.compdetails.CompetitionDetailsScreen"
     )
 
-    async with activity_testbed.shown(SelectCompetitionScreen):
+    async with activity_testbed.shown(SelectCompetitionScreen) as act:
         focus = activity_testbed.get_focus_widgets()[-1]
         assert "New competition" in focus.get_label()
         await activity_testbed.keypress("enter")
 
         assert sspicker_screen.shown
-        assert details_screen.shown
+
+        selected = act.response.result()
+        assert selected.id == "one"

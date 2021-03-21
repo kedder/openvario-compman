@@ -65,8 +65,3 @@ class WelcomeScreen(Activity):
         storage.get_settings().current_competition_id = comp.id
         storage.save_settings()
         self.finish(comp)
-
-        from compman.ui.compdetails import CompetitionDetailsScreen
-
-        details = CompetitionDetailsScreen(self.container)
-        details.show()
