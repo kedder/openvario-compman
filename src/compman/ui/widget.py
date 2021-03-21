@@ -1,9 +1,8 @@
-from typing import Optional, List, Union, Tuple
 import asyncio
 import logging
+from typing import List, Optional, Tuple, Union
 
 import urwid
-
 
 log = logging.getLogger("compman")
 

@@ -1,10 +1,9 @@
 import os
 
-import pytest
 import mock
+import pytest
 
 from compman import soarscore
-
 
 HERE = os.path.dirname(__file__)
 SOARSCORE_DIR = os.path.join(HERE, "fixtures", "soarscore")

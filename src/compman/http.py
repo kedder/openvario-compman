@@ -1,5 +1,5 @@
-from typing import IO
 import io
+from typing import IO
 
 from aiohttp import ClientSession
 

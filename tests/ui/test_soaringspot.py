@@ -2,12 +2,11 @@ import asyncio
 
 import pytest
 
-from compman.ui.soaringspot import SoaringSpotPickerScreen
-from compman.soaringspot import SoaringSpotContest
 from compman import storage
-
-from tests.fixtures.soaringspot import SoaringSpotFixture
+from compman.soaringspot import SoaringSpotContest
+from compman.ui.soaringspot import SoaringSpotPickerScreen
 from tests.fixtures.activitytestbed import ActivityTestbed
+from tests.fixtures.soaringspot import SoaringSpotFixture
 
 
 @pytest.mark.asyncio

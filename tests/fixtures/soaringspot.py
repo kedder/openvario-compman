@@ -1,8 +1,7 @@
-from typing import List, IO, Optional
-from unittest import mock
-import io
 import asyncio
-
+import io
+from typing import IO, List, Optional
+from unittest import mock
 
 from compman.soaringspot import SoaringSpotContest, SoaringSpotDownloadableFile
 

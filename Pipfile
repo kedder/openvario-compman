@@ -12,6 +12,7 @@ mypy = "*"
 pytest-mock = "*"
 importlib-metadata = "*"
 mock = "*"
+isort = "*"
 
 [packages]
 urwid = "*"

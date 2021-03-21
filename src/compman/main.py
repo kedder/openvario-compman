@@ -1,13 +1,12 @@
-import os
-import sys
+import argparse
 import asyncio
 import logging
-import argparse
+import os
+import sys
 
 import urwid
 
-from compman import storage
-from compman import xcsoar
+from compman import storage, xcsoar
 
 log = logging.getLogger("compman")
 

@@ -1,8 +1,8 @@
-from typing import Optional, Dict, Any, List, IO
+import json
 import logging
 import os
-import json
 from dataclasses import dataclass, field
+from typing import IO, Any, Dict, List, Optional
 
 DEFAULT_DATADIR = "~/.compman"
 

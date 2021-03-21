@@ -1,6 +1,6 @@
 import pytest
 
-from compman import soaringspot, http
+from compman import http, soaringspot
 
 
 @pytest.mark.asyncio

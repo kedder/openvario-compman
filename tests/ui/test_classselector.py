@@ -3,10 +3,10 @@ import asyncio
 import pytest
 import urwid
 
-from compman.ui.activity import Activity
-from compman.ui.classselector import CompetitionClassSelectorWidget
 from compman import storage
 from compman.soaringspot import SoaringSpotClientError
+from compman.ui.activity import Activity
+from compman.ui.classselector import CompetitionClassSelectorWidget
 
 
 class ActivityStub(Activity):

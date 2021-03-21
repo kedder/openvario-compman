@@ -1,12 +1,11 @@
-from typing import List
-import re
 import io
-from enum import Enum
+import re
 from dataclasses import dataclass
+from enum import Enum
+from typing import List
 
-from aiohttp import ClientSession, ClientError
+from aiohttp import ClientError, ClientSession
 from lxml import etree
-
 
 SOARINGSPOT_URL = "https://www.soaringspot.com"
 

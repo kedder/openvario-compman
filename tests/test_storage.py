@@ -1,6 +1,5 @@
-import os
 import io
-
+import os
 
 from compman import storage
 

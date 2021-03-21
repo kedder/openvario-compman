@@ -33,6 +33,9 @@ jobs:
     - name: Check with black
       run: |
         pipenv run black --check setup.py src tests
+    - name: Check with isort
+      run: |
+        pipenv run isort --check-only setup.py src tests
     - name: Coveralls
       if: ${{ success() }}
       env:

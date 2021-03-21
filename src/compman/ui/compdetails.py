@@ -1,18 +1,14 @@
-from typing import List, cast
-import logging
 import asyncio
+import logging
+from typing import List, cast
 
 import urwid
 
-from compman import storage
-from compman import soaringspot
-from compman import soarscore
-from compman import http
-from compman import xcsoar
+from compman import http, soaringspot, soarscore, storage, xcsoar
 from compman.ui import widget
 from compman.ui.activity import Activity
-from compman.ui.taskdownload import TaskDownloadWidget
 from compman.ui.classselector import CompetitionClassSelectorWidget
+from compman.ui.taskdownload import TaskDownloadWidget
 
 log = logging.getLogger("compman")
 

@@ -1,12 +1,11 @@
-from typing import List, Optional
-import io
-from dataclasses import dataclass
 import asyncio
+import io
 import re
+from dataclasses import dataclass
+from typing import List, Optional
 
 import requests
 from lxml import etree
-
 
 SOARSCORE_URL = "https://soarscore.com"
 

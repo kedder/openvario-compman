@@ -1,5 +1,5 @@
-from typing import List, Tuple
 import asyncio
+from typing import List, Tuple
 
 import urwid
 

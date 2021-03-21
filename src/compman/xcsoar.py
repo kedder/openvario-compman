@@ -1,7 +1,6 @@
-from typing import Optional, List
-from shutil import copyfile
 import os
-
+from shutil import copyfile
+from typing import List, Optional
 
 XCSOAR_DIR: Optional[str] = None
 

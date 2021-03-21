@@ -1,6 +1,6 @@
-from typing import Set
 import asyncio
 import logging
+from typing import Set
 
 import urwid
 

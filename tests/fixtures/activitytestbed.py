@@ -1,6 +1,6 @@
-from typing import Optional, Type, List
 import asyncio
 from contextlib import asynccontextmanager
+from typing import List, Optional, Type
 
 import urwid
 

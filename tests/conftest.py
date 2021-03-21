@@ -1,14 +1,14 @@
+import asyncio
 import os
 import shutil
-import asyncio
 
 import pytest
 
-from compman import storage
-from compman import xcsoar
+from compman import storage, xcsoar
+
+from .fixtures.activitytestbed import ActivityTestbed
 from .fixtures.soaringspot import SoaringSpotFixture
 from .fixtures.soarscore import SoarScoreFixture
-from .fixtures.activitytestbed import ActivityTestbed
 from .fixtures.widgettestbed import WidgetTestbedFactory
 
 HERE = os.path.dirname(__file__)

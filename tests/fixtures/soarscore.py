@@ -1,6 +1,5 @@
-from typing import List, Optional
 import asyncio
-
+from typing import List, Optional
 from unittest import mock
 
 from compman.soarscore import SoarScoreTaskInfo

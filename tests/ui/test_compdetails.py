@@ -2,11 +2,10 @@ import asyncio
 
 import pytest
 
-from compman import storage
-from compman import xcsoar
-from compman.soaringspot import SoaringSpotDownloadableFile, DownloadableFileType
-from compman.ui.compdetails import CompetitionDetailsScreen
+from compman import storage, xcsoar
+from compman.soaringspot import DownloadableFileType, SoaringSpotDownloadableFile
 from compman.soarscore import SoarScoreTaskInfo
+from compman.ui.compdetails import CompetitionDetailsScreen
 
 
 @pytest.mark.asyncio

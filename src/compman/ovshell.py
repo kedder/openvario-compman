@@ -1,12 +1,10 @@
-from typing import Sequence
 import os
+from typing import Sequence
 
 import urwid
 from ovshell import api
 
-from compman import storage
-from compman import xcsoar
-from compman import main
+from compman import main, storage, xcsoar
 from compman.ui.mainmenu import MainMenuScreen
 
 

@@ -1,9 +1,9 @@
 import asyncio
 
 import pytest
-
 from ovshell.testing import OpenVarioShellStub
-from compman.ovshell import extension, CompmanShellApp, CompmanShellActivity
+
+from compman.ovshell import CompmanShellActivity, CompmanShellApp, extension
 
 
 @pytest.fixture

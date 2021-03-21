@@ -1,12 +1,11 @@
-from typing import List
 import logging
+from typing import List
 
 import urwid
 
-from compman import soaringspot
-from compman import storage
-from compman.ui.activity import Activity
+from compman import soaringspot, storage
 from compman.ui import widget
+from compman.ui.activity import Activity
 
 log = logging.getLogger("compman")
 

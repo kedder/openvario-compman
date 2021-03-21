@@ -2,10 +2,9 @@ import logging
 
 import urwid
 
+from compman import storage
 from compman.ui import widget
 from compman.ui.activity import Activity
-from compman import storage
-
 
 log = logging.getLogger("compman")
 

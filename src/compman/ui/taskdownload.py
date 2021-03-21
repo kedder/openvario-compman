@@ -2,8 +2,7 @@ from typing import List, Optional
 
 import urwid
 
-from compman import storage
-from compman import soarscore
+from compman import soarscore, storage
 from compman.ui import widget
 from compman.ui.activity import Activity
 

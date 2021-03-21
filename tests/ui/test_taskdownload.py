@@ -3,10 +3,10 @@ import asyncio
 import pytest
 import urwid
 
-from compman.ui.activity import Activity
-from compman.ui.taskdownload import TaskDownloadWidget
 from compman import storage
 from compman.soarscore import SoarScoreClientError, SoarScoreTaskInfo
+from compman.ui.activity import Activity
+from compman.ui.taskdownload import TaskDownloadWidget
 
 
 class ActivityStub(Activity):
