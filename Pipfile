@@ -13,6 +13,9 @@ pytest-mock = "*"
 importlib-metadata = "*"
 mock = "*"
 isort = "*"
+types-setuptools = "*"
+types-requests = "*"
+types-mock = "*"
 
 [packages]
 urwid = "*"
