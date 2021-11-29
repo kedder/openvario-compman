@@ -191,7 +191,7 @@
                 "sha256:735e240d9a8506778cd7a453d97e817e536bb1fc29f4f6961ce297b9c7a917b0",
                 "sha256:83fcdeb225499d6344c8f7f34684c2981270beacc32ede2e669e94f7fa544405"
             ],
-            "markers": "python_version >= '3'",
+            "markers": "python_full_version >= '3.5.0'",
             "version": "==2.0.8"
         },
         "dbus-next": {
@@ -965,11 +965,11 @@
         },
         "types-mock": {
             "hashes": [
-                "sha256:1a470543be8de673e2ea14739622de3bfb8c9b10429f50338ba9ca1e868c15e9",
-                "sha256:1ad09970f4f5ec45a138ab1e88d032f010e851bccef7765b34737ed390bbc5c8"
+                "sha256:b29a0d14b167ec83842b4c7c59201a1cc2eed7e603e894d0ccfeafc9a2646e31",
+                "sha256:d51f75ea6732355cb400c3146adb4472d33203430639230c2ceac8816b9734ab"
             ],
             "index": "pypi",
-            "version": "==4.0.1"
+            "version": "==4.0.4"
         },
         "types-requests": {
             "hashes": [
