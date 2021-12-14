@@ -7,7 +7,7 @@ verify_ssl = true
 pytest = "*"
 pytest-coverage = "*"
 pytest-asyncio = "*"
-black = "==19.10b0"
+black = "==21.12b0"
 mypy = "*"
 pytest-mock = "*"
 importlib-metadata = "*"
