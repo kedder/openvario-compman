@@ -253,7 +253,7 @@ async def test_taskdownload_fetch_error(storage_dir, soarscore, widget_testbed) 
 
 @pytest.mark.asyncio
 async def test_taskdownload_no_ss_url(storage_dir, soarscore, widget_testbed) -> None:
-    comp = storage.StoredCompetition("test", "Test Competition",)
+    comp = storage.StoredCompetition("test", "Test Competition")
     act = ActivityStub(urwid.SolidFill("T"))
     wdg = TaskDownloadWidget(act, comp)
     wtb = widget_testbed.for_widget(wdg)
