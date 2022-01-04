@@ -888,11 +888,11 @@
         },
         "types-setuptools": {
             "hashes": [
-                "sha256:9fe4180548e5cbb44cc0d343a47e4dc1d6769c31e16447994788c28df169011f",
-                "sha256:a3cbcbf3f02142bb5d3b5c5f5918f453b8752362b96d58aba2a5cfa43ba6d209"
+                "sha256:920a7c1ee120025e939a1707f8fd09a1266edbf7848eae7b8de7c5909a824cc8",
+                "sha256:a4600efdca68a33204ad9c083fd9966d63aee61a7d007e912b6afc6ff57d6e02"
             ],
             "index": "pypi",
-            "version": "==57.4.4"
+            "version": "==57.4.5"
         },
         "typing-extensions": {
             "hashes": [
