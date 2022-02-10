@@ -848,11 +848,11 @@
         },
         "types-setuptools": {
             "hashes": [
-                "sha256:af8480491f9894e6081fb568811978fd7ac87434cab122a0605a32be08d98dbe",
-                "sha256:d5545f2ab3dad24f5cb1c01ba74c1acb7407ab31b2618d423158fc84085160f1"
+                "sha256:536ef74744f8e1e4be4fc719887f886e74e4cf3c792b4a06984320be4df450b5",
+                "sha256:948dc6863373750e2cd0b223a84f1fb608414cde5e55cf38ea657b93aeb411d2"
             ],
             "index": "pypi",
-            "version": "==57.4.8"
+            "version": "==57.4.9"
         },
         "types-urllib3": {
             "hashes": [
