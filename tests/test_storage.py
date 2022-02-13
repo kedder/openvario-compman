@@ -158,8 +158,8 @@ def test_storedfile_format_size() -> None:
     assert storage.StoredFile("", size=100000).format_size() == "97.7KiB"
     assert storage.StoredFile("", size=10000000).format_size() == "9.5MiB"
     assert storage.StoredFile("", size=None).format_size() == "?"
-    assert storage.StoredFile("", size=2 ** 32).format_size() == "4.0GiB"
-    assert storage.StoredFile("", size=2 ** 48).format_size() == "256.0TiB"
+    assert storage.StoredFile("", size=2**32).format_size() == "4.0GiB"
+    assert storage.StoredFile("", size=2**48).format_size() == "256.0TiB"
 
 
 def test_get_full_file_path(storage_dir) -> None:
