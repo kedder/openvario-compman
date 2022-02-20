@@ -4,7 +4,7 @@ Changlog for Opevario Compman
 0.6.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Drop support for python-3.7 and 3-8, add support for 3.9 and 3.10
 
 
 0.6.0 (2021-03-26)
