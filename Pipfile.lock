@@ -858,11 +858,11 @@
         },
         "types-mock": {
             "hashes": [
-                "sha256:81f98e66bddde1b2a8d96c15c084d5d3ed96cf6137bca9ba8aabc6b6865b9ca7",
-                "sha256:f8b1dbe128dc2d5aa038876a8b497dfd1a9405210a5eb3dc4b4757c2e254627c"
+                "sha256:7c1db9f937109d96da14e5ed95c89920c3e4913eeff44a4adfea38eb335d0c99",
+                "sha256:82c819a5ba384c47a65c148df062138f38790b61d7e6b40eaeb8f2179f28f842"
             ],
             "index": "pypi",
-            "version": "==4.0.12"
+            "version": "==4.0.13"
         },
         "types-requests": {
             "hashes": [
