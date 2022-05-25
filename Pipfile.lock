@@ -867,11 +867,11 @@
         },
         "types-requests": {
             "hashes": [
-                "sha256:302137cb5bd482357398a155faf3ed095855fbc6994e952d0496c7fd50f44125",
-                "sha256:a6a04c0274c0949fd0525f35d8b53ac34e77afecbeb3c4932ddc6ce675ac009c"
+                "sha256:6d8463ffe1f6edcf2e5361740a6140e7a16d427c267d83c7c1d3d1298f4e67c5",
+                "sha256:d618d9809fa32f514cf17cea8460814da671c56366fb1c908accca8bf183112b"
             ],
             "index": "pypi",
-            "version": "==2.27.26"
+            "version": "==2.27.27"
         },
         "types-setuptools": {
             "hashes": [
