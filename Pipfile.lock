@@ -192,7 +192,7 @@
                 "sha256:2857e29ff0d34db842cd7ca3230549d1a697f96ee6d3fb071cfa6c7393832597",
                 "sha256:6881edbebdb17b39b4eaaa821b438bf6eddffb4468cf344f09f89def34a8b1df"
             ],
-            "markers": "python_full_version >= '3.5.0'",
+            "markers": "python_version >= '3.5'",
             "version": "==2.0.12"
         },
         "dbus-next": {
@@ -273,7 +273,7 @@
                 "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff",
                 "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"
             ],
-            "markers": "python_full_version >= '3.5.0'",
+            "markers": "python_version >= '3.5'",
             "version": "==3.3"
         },
         "lxml": {
@@ -869,11 +869,11 @@
         },
         "types-requests": {
             "hashes": [
-                "sha256:1b6cf6a2bf57fd8018c1b636b69762900466fafddfb62e1330e092f3d4b0966a",
-                "sha256:6fab97b99fea52b9c7b466a4dd93e06bb325bc7e7420475e87831026a8dd35cc"
+                "sha256:85383b4ef0535f639c3f06c5bbb6494bbf59570c4cd88bbcf540f0b2ac1b49ab",
+                "sha256:9863d16dfbb3fa55dcda64fa3b989e76e8859033b26c1e1623e30465cfe294d3"
             ],
             "index": "pypi",
-            "version": "==2.27.31"
+            "version": "==2.28.0"
         },
         "types-setuptools": {
             "hashes": [
