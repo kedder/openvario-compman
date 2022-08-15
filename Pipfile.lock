@@ -903,11 +903,11 @@
         },
         "types-setuptools": {
             "hashes": [
-                "sha256:ccf621e6bce09f9b6dee57e81ce3e6878e3dc795395ae0b749deb340198e288b",
-                "sha256:da53c28d27e5cc8a37d4f219dc36be559b879c65642fa96d0176402602b1cda3"
+                "sha256:005ccb8a1a7d0dce61cd63081dad0ddc599af4413bb49ce1333119a78a7bb2e1",
+                "sha256:8290b6bf1d916e6b007784d5cbcd112a1af9a2d76343231fcce0a55185343702"
             ],
             "index": "pypi",
-            "version": "==64.0.0"
+            "version": "==64.0.1"
         },
         "types-urllib3": {
             "hashes": [
