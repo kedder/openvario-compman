@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from typing import List, cast
+from typing import List, Optional, cast
 
 import urwid
 
@@ -277,7 +277,7 @@ class CompetitionDetailsScreen(Activity):
         return urwid.AttrMap(radio, "li normal", "li focus")
 
     def _make_label(
-        self, sf: storage.StoredFile, extra: widget.UrwidMarkup = None
+        self, sf: storage.StoredFile, extra: Optional[widget.UrwidMarkup] = None
     ) -> widget.UrwidMarkup:
         label = f"{sf.name} ({sf.format_size()})"
         markup: List[widget.UrwidMarkup] = [label, " "]
