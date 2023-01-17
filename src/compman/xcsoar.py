@@ -38,7 +38,7 @@ class XCSoarProfile:
             self.lines.append(modified_line)
 
 
-def init(xcsoar_dir: str = None) -> None:
+def init(xcsoar_dir: Optional[str] = None) -> None:
     global XCSOAR_DIR
     if xcsoar_dir is None:
         xcsoar_dir = find_xcsoar_dir()

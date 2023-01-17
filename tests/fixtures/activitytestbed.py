@@ -33,7 +33,7 @@ class ActivityStub(Activity):
 
 
 class ActivityStubMonitor:
-    def __init__(self, spec: str, result: object = None) -> None:
+    def __init__(self, spec: str, result: Optional[object] = None) -> None:
         self.spec = spec
         self.result = result
         self.created = False
@@ -81,7 +81,7 @@ class ActivityTestbed:
     async def response(self):
         return await self.activity.response
 
-    def mock(self, spec, result: object = None) -> ActivityStubMonitor:
+    def mock(self, spec, result: Optional[object] = None) -> ActivityStubMonitor:
         monitor = ActivityStubMonitor(spec, result)
         self.mocker.patch(spec, monitor.create)
         return monitor
