@@ -94,7 +94,6 @@ async def test_taskdownload_task_view(storage_dir, soarscore, widget_testbed) ->
 async def test_taskdownload_task_download(
     storage_dir, soarscore, widget_testbed
 ) -> None:
-
     state = {"downloading_task": None}
 
     def _on_download_task(ev, task):

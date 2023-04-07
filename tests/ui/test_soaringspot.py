@@ -22,7 +22,6 @@ async def test_soaringspot_no_contests(
 async def test_soaringspot_view(
     soaringspot: SoaringSpotFixture, activity_testbed: ActivityTestbed
 ) -> None:
-
     soaringspot.competitions = [
         SoaringSpotContest(
             id="one",
