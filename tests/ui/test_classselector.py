@@ -118,7 +118,6 @@ async def test_classselector_change_class(
 async def test_classselector_cancel_selection(
     storage_dir, soaringspot, widget_testbed
 ) -> None:
-
     soaringspot.classes = []
     comp = storage.StoredCompetition(
         "test",
@@ -168,7 +167,6 @@ async def test_classselector_cancel_selection(
 async def test_classselector_fetch_error(
     storage_dir, soaringspot, widget_testbed
 ) -> None:
-
     comp = storage.StoredCompetition(
         "test", "Test Competition", soaringspot_url="http://soaringspot.com/test"
     )
