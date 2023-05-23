@@ -889,11 +889,11 @@
         },
         "importlib-metadata": {
             "hashes": [
-                "sha256:8388b74023a138c605fddd0d47cb81dd706232569f56c9aca7d9c7fdb54caeba",
-                "sha256:9127aad2f49d7203e7112098c12b92e4fd1061ccd18548cdfdc49171a8c073cc"
+                "sha256:43dd286a2cd8995d5eaef7fee2066340423b818ed3fd70adf0bad5f1fac53fed",
+                "sha256:92501cdf9cc66ebd3e612f1b4f0c0765dfa42f0fa38ffb319b6bd84dd675d705"
             ],
             "index": "pypi",
-            "version": "==6.2.0"
+            "version": "==6.6.0"
         },
         "iniconfig": {
             "hashes": [
