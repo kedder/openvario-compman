@@ -1056,11 +1056,11 @@
         },
         "types-setuptools": {
             "hashes": [
-                "sha256:ea2873dc8dd9e8421929dc50617ac7c2054c9a873942c5b5b606e2effef5db12",
-                "sha256:f46b11773b1aeddbd2ef32fd6a6091ef33aa9b32daa124f6ce63f616de59ae51"
+                "sha256:6df73340d96b238a4188b7b7668814b37e8018168aef1eef94a3b1872e3f60ff",
+                "sha256:95c9ed61871d6c0e258433373a4e1753c0a7c3627a46f4d4058c7b5a08ab844f"
             ],
             "index": "pypi",
-            "version": "==67.6.0.7"
+            "version": "==67.8.0.0"
         },
         "types-urllib3": {
             "hashes": [
