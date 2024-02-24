@@ -682,10 +682,19 @@
         },
         "urwid": {
             "hashes": [
-                "sha256:588bee9c1cb208d0906a9f73c613d2bd32c3ed3702012f51efe318a3f2127eae"
+                "sha256:bc302170fdbdda0aded2787ba66006af939dcff967606e9840a6f2af149adf12",
+                "sha256:dea5b2e8f992946774fe864894d55c1045175d96c1266904755909dcd52d3cb5"
             ],
             "index": "pypi",
-            "version": "==2.1.2"
+            "markers": "python_version >= '3.8'",
+            "version": "==2.6.4"
+        },
+        "wcwidth": {
+            "hashes": [
+                "sha256:3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859",
+                "sha256:72ea0c06399eb286d978fdedb6923a9eb47e1c486ce63e9b4e64fc18303972b5"
+            ],
+            "version": "==0.2.13"
         },
         "yarl": {
             "hashes": [
