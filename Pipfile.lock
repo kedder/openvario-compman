@@ -1429,12 +1429,12 @@
         },
         "types-setuptools": {
             "hashes": [
-                "sha256:2c6be895adc919fd0109414888c6ad5a972398d4eef59275416a1bcb0df6167f",
-                "sha256:be23570baee0587f0c86ce970c15edc919718105c048f236dc6049327192a04d"
+                "sha256:842cbf399812d2b65042c9d6ff35113bbf282dee38794779aa1f94e597bafc35",
+                "sha256:bd0db2a4b9f2c49ac5564be4e0fb3125c4c46b1f73eafdcbceffa5b005cceca4"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==69.5.0.20240518"
+            "version": "==70.3.0.20240710"
         },
         "types-urllib3": {
             "hashes": [
