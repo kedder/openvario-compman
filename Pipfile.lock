@@ -1571,12 +1571,12 @@
         },
         "types-setuptools": {
             "hashes": [
-                "sha256:2e48ff3acd4919471e80d5e3f049cce5c177e108d5d36d2d4cee3fa4d4104258",
-                "sha256:86ea31b5f6df2c6b8f2dc8ae3f72b213607f62549b6fa2ed5866e5299f968694"
+                "sha256:1144b2ab8fa986061f963391fdbde16df20582e3cc39c94340e71aa61cc7203f",
+                "sha256:b6939ffdbc50ffdc0bcfbf14f7a6de1ddc5510906c1ca2bd62c23646e5798b1a"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==75.2.0.20241019"
+            "version": "==75.5.0.20241116"
         },
         "types-urllib3": {
             "hashes": [
