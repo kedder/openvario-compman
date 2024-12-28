@@ -1545,12 +1545,12 @@
         },
         "types-setuptools": {
             "hashes": [
-                "sha256:196aaf1811cbc1c77ac1d4c4879d5308b6fdf426e56b73baadbca2a1827dadef",
-                "sha256:d69c445f7bdd5e49d1b2441aadcee1388febcc9ad9d9d5fd33648b555e0b1c31"
+                "sha256:7cbfd3bf2944f88bbcdd321b86ddd878232a277be95d44c78a53585d78ebc2f6",
+                "sha256:d9478a985057ed48a994c707f548e55aababa85fe1c9b212f43ab5a1fffd3211"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==75.5.0.20241122"
+            "version": "==75.6.0.20241223"
         },
         "types-urllib3": {
             "hashes": [
